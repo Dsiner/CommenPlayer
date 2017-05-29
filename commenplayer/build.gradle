@@ -1,15 +1,17 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
+
     defaultConfig {
-        applicationId "com.d.iplayer"
-        minSdkVersion 10
+        minSdkVersion 9
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -23,12 +25,23 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':commenplayer')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-annotations:25.3.1'
+
+    //required, enough for most devices.
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.7.6'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.7.6'
+
+    //Other ABIs: optional
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.7.6'
+    compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.7.6'
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86:0.7.6'
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.7.6'
+
+    //ExoPlayer as IMediaPlayer: optional experimental
+    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.7.6'
 }

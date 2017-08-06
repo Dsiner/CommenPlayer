@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.d.commenplayer.commen.CommenPlayer
+    <com.d.commenplayer.CommenPlayer
         android:id="@+id/player"
         android:layout_width="match_parent"
-        android:layout_height="180dp" />
+        android:layout_height="180dp"
+        android:background="@color/colorBlack" />
 
     <View
         android:layout_width="match_parent"

@@ -92,11 +92,13 @@ public class Factory {
                 } else {
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 0);
                 }
+
                 if (mSettings.getUsingOpenSLES()) {
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 1);
                 } else {
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
                 }
+
                 String pixelFormat = mSettings.getPixelFormat();
                 if (TextUtils.isEmpty(pixelFormat)) {
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);

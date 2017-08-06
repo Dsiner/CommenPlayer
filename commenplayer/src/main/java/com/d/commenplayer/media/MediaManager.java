@@ -228,7 +228,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
 
     @Override
     public void start() {
-        if (isInPlaybackState() && mediaPlayer != null) {
+        if (isInPlaybackState()) {
             mediaPlayer.start();
             currentState = STATE_PLAYING;
         }
@@ -237,18 +237,16 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
 
     @Override
     public void pause() {
-        if (isInPlaybackState() && mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
-                currentState = STATE_PAUSED;
-            }
+        if (isInPlaybackState()) {
+            mediaPlayer.pause();
+            currentState = STATE_PAUSED;
         }
         targetState = STATE_PAUSED;
     }
 
     @Override
     public int getDuration() {
-        if (isInPlaybackState() && mediaPlayer != null) {
+        if (isInPlaybackState()) {
             return (int) mediaPlayer.getDuration();
         }
         return -1;
@@ -256,7 +254,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
 
     @Override
     public int getCurrentPosition() {
-        if (isInPlaybackState() && mediaPlayer != null) {
+        if (isInPlaybackState()) {
             return (int) mediaPlayer.getCurrentPosition();
         }
         return 0;
@@ -264,7 +262,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
 
     @Override
     public void seekTo(int msec) {
-        if (isInPlaybackState() && mediaPlayer != null) {
+        if (isInPlaybackState()) {
             mediaPlayer.seekTo(msec);
             seekWhenPrepared = 0;
         } else {
@@ -274,7 +272,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
 
     @Override
     public boolean isPlaying() {
-        return isInPlaybackState() && mediaPlayer != null && mediaPlayer.isPlaying();
+        return isInPlaybackState() && mediaPlayer.isPlaying();
     }
 
     @Override

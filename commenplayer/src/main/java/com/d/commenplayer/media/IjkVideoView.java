@@ -302,6 +302,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     }
 
     @Override
+    public void onLoading() {
+
+    }
+
+    @Override
     public void onCompletion(IMediaPlayer mp) {
         if (listener != null) {
             listener.onCompletion(mp);
@@ -415,6 +420,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     }
 
     public void onPause() {
+        if (!isPlaying()) {
+            return;
+        }
         isPause = true;
         if (isLive) {
             release(false);

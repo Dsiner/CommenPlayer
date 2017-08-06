@@ -7,6 +7,9 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * Created by D on 2017/5/28.
  */
 public interface IPlayerListener {
+
+    void onLoading();
+
     /**
      * Register a callback to be invoked when the end of a media file
      * has been reached during playback.

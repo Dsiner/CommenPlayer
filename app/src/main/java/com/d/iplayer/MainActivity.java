@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 
-import com.d.commenplayer.commen.CommenPlayer;
-import com.d.commenplayer.listener.IPlayListener;
+import com.d.commenplayer.CommenPlayer;
+import com.d.commenplayer.listener.IPlayerListener;
 import com.d.commenplayer.listener.OnNetChangeListener;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -16,6 +16,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 public class MainActivity extends Activity {
     private String url1 = "http://vpls.cdn.videojj.com/scene/video02_720p.mp4";
     private String url2 = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+    private String url3 = "http://tanzi27niu.cdsb.mobi/wps/wp-content/uploads/2017/05/2017-05-17_17-33-30.mp4";
     private CommenPlayer player;
 
     @Override
@@ -48,7 +49,7 @@ public class MainActivity extends Activity {
             public void onNoAvailable() {
 
             }
-        }).setOnPlayListener(new IPlayListener() {
+        }).setOnPlayerListener(new IPlayerListener() {
             @Override
             public void onLoading() {
 

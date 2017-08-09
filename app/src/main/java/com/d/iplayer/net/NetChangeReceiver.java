@@ -1,4 +1,4 @@
-package com.d.commenplayer.util;
+package com.d.iplayer.net;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,64 +7,45 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-import com.d.commenplayer.listener.OnNetChangeListener;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * NetChangeReceiver
  * Created by D on 2017/5/28.
  */
 public class NetChangeReceiver extends BroadcastReceiver {
-    private OnNetChangeListener netChangeListener;
-
-    public NetChangeReceiver(Context context) {
-        if (context != null) {
-            resetNetStatus(context.getApplicationContext(), false);
-        }
-    }
-
-    public void setNetChangeListener(OnNetChangeListener netChangeListener) {
-        this.netChangeListener = netChangeListener;
-    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        resetNetStatus(context, true);
+        resetNetStatus(context);
     }
 
-    private void resetNetStatus(Context context, boolean listener) {
-        int networkType = getNetworkType(context.getApplicationContext());
+    public static void resetNetStatus(Context context) {
+        int networkType = getNetworkType(context);
         switch (networkType) {
             case 1:
-                if (Constans.NET_STATUS != Constans.UN_CONNECTED) {
-                    Constans.NET_STATUS = Constans.UN_CONNECTED;
-                    if (listener && netChangeListener != null) {
-                        netChangeListener.onUnConnected();
-                    }
+                if (NetConstans.NET_STATUS != NetConstans.UN_CONNECTED) {
+                    NetConstans.NET_STATUS = NetConstans.UN_CONNECTED;
+                    EventBus.getDefault().post(new NetEvent(NetConstans.UN_CONNECTED));
                 }
                 break;
             case 2:
             case 4:
-                if (Constans.NET_STATUS != Constans.CONNECTED_MOBILE) {
-                    Constans.NET_STATUS = Constans.CONNECTED_MOBILE;
-                    if (listener && netChangeListener != null) {
-                        netChangeListener.onMobile();
-                    }
+                if (NetConstans.NET_STATUS != NetConstans.CONNECTED_MOBILE) {
+                    NetConstans.NET_STATUS = NetConstans.CONNECTED_MOBILE;
+                    EventBus.getDefault().post(new NetEvent(NetConstans.CONNECTED_MOBILE));
                 }
                 break;
             case 3:
-                if (Constans.NET_STATUS != Constans.CONNECTED_WIFI) {
-                    Constans.NET_STATUS = Constans.CONNECTED_WIFI;
-                    if (listener && netChangeListener != null) {
-                        netChangeListener.onWifi();
-                    }
+                if (NetConstans.NET_STATUS != NetConstans.CONNECTED_WIFI) {
+                    NetConstans.NET_STATUS = NetConstans.CONNECTED_WIFI;
+                    EventBus.getDefault().post(new NetEvent(NetConstans.CONNECTED_WIFI));
                 }
                 break;
             default:
-                if (Constans.NET_STATUS != Constans.NO_AVAILABLE) {
-                    Constans.NET_STATUS = Constans.NO_AVAILABLE;
-                    if (listener && netChangeListener != null) {
-                        netChangeListener.onNoAvailable();
-                    }
+                if (NetConstans.NET_STATUS != NetConstans.NO_AVAILABLE) {
+                    NetConstans.NET_STATUS = NetConstans.NO_AVAILABLE;
+                    EventBus.getDefault().post(new NetEvent(NetConstans.NO_AVAILABLE));
                 }
                 break;
         }

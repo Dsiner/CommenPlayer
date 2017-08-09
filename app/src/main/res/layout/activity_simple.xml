@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlyt_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.d.commenplayer.CommenPlayer
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@color/colorBlack" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/player" />
+
+    <Button
+        android:id="@+id/btn_view_history"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/player"
+        android:layout_marginTop="12dp"
+        android:text="view history" />
+</RelativeLayout>

@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rlyt_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp">
 
-    <com.d.commenplayer.CommenPlayer
-        android:id="@+id/player"
+    <Button
+        android:id="@+id/btn_simple"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@color/colorBlack" />
+        android:layout_height="45dp"
+        android:gravity="center"
+        android:text="Simple" />
 
-    <View
+    <Button
+        android:id="@+id/btn_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/player" />
-</RelativeLayout>
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="List" />
+</LinearLayout>

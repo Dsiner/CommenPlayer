@@ -35,7 +35,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
     public static final int STATE_PLAYBACK_COMPLETED = 5;
 
     private static MediaManager mManager;
-    private Context context;
+    private Context appContext;
     private Settings settings;
     private Handler handler;
     private IMediaPlayer mediaPlayer;
@@ -58,15 +58,15 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
     public static MediaManager instance(Context context) {
         if (mManager == null) {
             synchronized (MediaManager.class) {
-                mManager = new MediaManager(context);
+                mManager = new MediaManager(context.getApplicationContext());
             }
         }
         return mManager;
     }
 
     private MediaManager(Context context) {
-        this.context = context.getApplicationContext();
-        settings = new Settings(context);
+        appContext = context.getApplicationContext();
+        settings = new Settings(appContext);
         handler = new Handler(Looper.getMainLooper());
     }
 
@@ -80,11 +80,11 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
         // we shouldn't clear the target state, because somebody might have
         // called start() previously
         release(false);
-        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager am = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
         //AudioManager.AUDIOFOCUS_GAIN / AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
         am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         try {
-            mediaPlayer = Factory.createPlayer(context, settings.getPlayer());
+            mediaPlayer = Factory.createPlayer(appContext, settings.getPlayer());
             if (mediaPlayer == null) {
                 return null;
             }
@@ -95,7 +95,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
                 IMediaDataSource dataSource = new FileMediaDataSource(new File(uri.toString()));
                 mediaPlayer.setDataSource(dataSource);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                mediaPlayer.setDataSource(context, uri, heads);
+                mediaPlayer.setDataSource(appContext, uri, heads);
             } else {
                 mediaPlayer.setDataSource(uri.toString());
             }
@@ -120,7 +120,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
 
     public void release(boolean clearTargetState) {
         if (mediaPlayer != null) {
-//            mediaPlayer.stop();
+            mediaPlayer.stop();
             mediaPlayer.reset();
             mediaPlayer.release();
             mediaPlayer = null;
@@ -129,7 +129,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
         if (clearTargetState) {
             targetState = STATE_IDLE;
         }
-        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager am = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
         am.abandonAudioFocus(null);
     }
 
@@ -190,8 +190,10 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (listener != null)
-                        listener.onError(mp, what, extra);
+                    if (listener == null) {
+                        return;
+                    }
+                    listener.onError(mp, what, extra);
                 }
             });
             return true;
@@ -205,8 +207,10 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (listener != null)
-                        listener.onInfo(mp, what, extra);
+                    if (listener == null) {
+                        return;
+                    }
+                    listener.onInfo(mp, what, extra);
                 }
             });
             return true;
@@ -220,6 +224,9 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    if (listener == null) {
+                        return;
+                    }
                     listener.onVideoSizeChanged(mp, width, height, sarNum, sarDen);
                 }
             });

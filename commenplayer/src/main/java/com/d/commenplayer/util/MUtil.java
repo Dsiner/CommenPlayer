@@ -3,10 +3,18 @@ package com.d.commenplayer.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.media.MediaMetadataRetriever;
 import android.util.DisplayMetrics;
 import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
 
-public class Util {
+import com.d.commenplayer.CommenPlayer;
+import com.d.commenplayer.adapter.AdapterPlayer;
+
+public class MUtil {
     public final static int SEEKBAR_MAX = 1000;
 
     /**
@@ -44,7 +52,7 @@ public class Util {
      * @param duration:播放总时间
      */
     public static int getProgress(int position, int duration) {
-        int progress = (int) (1.0f * Util.SEEKBAR_MAX * position / duration);
+        int progress = (int) (1.0f * MUtil.SEEKBAR_MAX * position / duration);
         progress = Math.min(progress, duration);
         progress = Math.max(progress, 0);
         return progress;
@@ -56,8 +64,8 @@ public class Util {
      * @param bufferPercentage:缓冲进度bufferPercentage,0-100
      */
     public static int getSecondaryProgress(int bufferPercentage) {
-        int secondaryProgress = (int) (1.0f * bufferPercentage / 100 * Util.SEEKBAR_MAX);
-        secondaryProgress = Math.min(secondaryProgress, Util.SEEKBAR_MAX);
+        int secondaryProgress = (int) (1.0f * bufferPercentage / 100 * MUtil.SEEKBAR_MAX);
+        secondaryProgress = Math.min(secondaryProgress, MUtil.SEEKBAR_MAX);
         secondaryProgress = Math.max(secondaryProgress, 0);
         return secondaryProgress;
     }
@@ -69,10 +77,29 @@ public class Util {
      * @param duration:播放总时间
      */
     public static int getPosition(int progress, int duration) {
-        int position = (int) (1.0f * progress / Util.SEEKBAR_MAX * duration);
+        int position = (int) (1.0f * progress / MUtil.SEEKBAR_MAX * duration);
         position = Math.min(position, duration);
         position = Math.max(position, 0);
         return position;
+    }
+
+    public static void peelInject(CommenPlayer player, ViewGroup root) {
+        if (player == null || root == null || player.getParent() == root) {
+            return;
+        }
+        if (player.getParent() != null) {
+            if (player.getParent() instanceof AdapterPlayer) {
+                ((AdapterPlayer) player.getParent()).recycle(false);
+            } else {
+                ((ViewGroup) player.getParent()).removeView(player);
+            }
+        }
+        if (root instanceof AdapterPlayer) {
+            ((AdapterPlayer) root).inject();
+        } else {
+            root.removeView(player);
+            root.addView(player, 0);
+        }
     }
 
     public static int getScreenOrientation(Activity activity) {
@@ -125,5 +152,47 @@ public class Util {
             }
         }
         return orientation;
+    }
+
+    public static Bitmap getScreenShot(Activity activity) {
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bmp = view.getDrawingCache();
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Bitmap ret = Bitmap.createBitmap(bmp, 0, 0, dm.widthPixels, dm.heightPixels);
+        view.destroyDrawingCache();
+        bmp.recycle();
+        return ret;
+    }
+
+    public static Bitmap getFrame(Context context, String url, int pos) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.GINGERBREAD_MR1) {
+            return null;
+        }
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        Bitmap bitmap = null;
+        try {
+            retriever.setDataSource(url);
+            //取得视频的长度(单位为毫秒)
+//            String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            bitmap = retriever.getFrameAtTime(pos, MediaMetadataRetriever.OPTION_CLOSEST);//获取时间点的缩略图
+            retriever.release();
+        } catch (Exception e) {
+            retriever.release();
+            MLog.d("fail to get frame" + e.getMessage());
+        }
+        return bitmap;
+    }
+
+    /**
+     * 合成
+     */
+    private static void drawBitmap(Bitmap bitmap, Bitmap bp, float left, float top) {
+        Canvas cv = new Canvas(bitmap);
+        cv.drawBitmap(bp, left, top, null);
+        cv.save(Canvas.ALL_SAVE_FLAG);//保存
+        cv.restore();//存储
     }
 }

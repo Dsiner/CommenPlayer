@@ -17,11 +17,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.d.commenplayer.R;
 import com.d.commenplayer.listener.IMediaPlayerControl;
-import com.d.commenplayer.util.Util;
+import com.d.commenplayer.util.MUtil;
 
 /**
  * 视频浮层-滑动控制
@@ -43,6 +42,8 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
     private AudioManager audioManager;
     private int touchSlop;
     private boolean scrollValid;
+    private boolean toVolume;
+    private boolean toSeek;
 
     private int position;
     private int duration;
@@ -75,7 +76,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         View root = LayoutInflater.from(context).inflate(R.layout.layout_touch, this);
         initView(root);
-        int[] size = Util.getScreenSize(mActivity);
+        int[] size = MUtil.getScreenSize(mActivity);
         screenWidth = size[0];
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -101,14 +102,14 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
     }
 
     private void onProgressSlide(float percent) {
-        if (listener == null) {
+        if (listener == null || listener.isLive()) {
             return;
         }
         show(TYPE_PROGRESS);
         newPosition = (int) (1f * position + 1f * duration * percent);
         newPosition = Math.min(newPosition, duration);
         newPosition = Math.max(newPosition, 0);
-        tvProgress.setText(Util.generateTime(newPosition));
+        tvProgress.setText(MUtil.generateTime(newPosition));
         listener.progressTo(newPosition, 0);
     }
 
@@ -160,10 +161,10 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
      * 手势结束
      */
     private void endGesture() {
+        show(GONE);
         volume = -1;
         brightness = -1f;
-        show(GONE);
-        if (scrollValid && listener != null) {
+        if (scrollValid && toSeek && listener != null && !listener.isLive()) {
             listener.seekTo(newPosition);
             listener.lockProgress(false);
             scrollValid = false;
@@ -185,9 +186,6 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
     }
 
     public class PlayerGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private boolean toVolume;
-        private boolean toSeek;
-
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             float oldX = e1.getX(), oldY = e1.getY();
@@ -197,7 +195,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
                 toSeek = Math.abs(deltaX) >= Math.abs(deltaY);
                 toVolume = oldX > screenWidth * 0.5f;
                 scrollValid = true;//滑动生效
-                if (listener != null) {
+                if (toSeek && listener != null) {
                     position = listener.getCurrentPosition();
                     duration = listener.getDuration();
                     listener.lockProgress(true);
@@ -226,7 +224,6 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            Toast.makeText(mActivity, "双击", Toast.LENGTH_SHORT).show();
             if (listener != null) {
                 listener.toggleAspectRatio();
                 return true;
@@ -236,7 +233,10 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Toast.makeText(mActivity, "单击", Toast.LENGTH_SHORT).show();
+            if (listener != null) {
+                listener.toggleStick();
+                return true;
+            }
             return super.onSingleTapConfirmed(e);
         }
     }

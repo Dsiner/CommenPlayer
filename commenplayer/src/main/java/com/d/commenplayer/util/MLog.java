@@ -7,7 +7,12 @@ import android.util.Log;
  * Log工具类，可以打印Log日志类名，方法名，行号
  */
 public class MLog {
-    private static final String LOG_TAG = "IjkPlayer";
+    /**
+     * Debug
+     */
+    public final static boolean DEVELOP_MODE = true;
+
+    private static final String LOG_TAG = "CommenPlayer";
     private static MLog log;
 
     public synchronized static MLog getInstance() {
@@ -20,64 +25,52 @@ public class MLog {
     }
 
     public static void v(String message) {
-        if (TextUtils.isEmpty(message)) {
+        if (!DEVELOP_MODE || TextUtils.isEmpty(message)) {
             return;
         }
-        if (DEBUG.DEVELOP_MODE) {
-            final StackTraceElement[] stack = new Throwable().getStackTrace();
-            final int i = 1;
-            final StackTraceElement ste = stack[i];
-            Log.println(Log.VERBOSE, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
-        }
+        final StackTraceElement[] stack = new Throwable().getStackTrace();
+        final int i = 1;
+        final StackTraceElement ste = stack[i];
+        Log.println(Log.VERBOSE, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
     }
 
     public static void d(String message) {
-        if (TextUtils.isEmpty(message)) {
+        if (!DEVELOP_MODE || TextUtils.isEmpty(message)) {
             return;
         }
-        if (DEBUG.DEVELOP_MODE) {
-            final StackTraceElement[] stack = new Throwable().getStackTrace();
-            final int i = 1;
-            final StackTraceElement ste = stack[i];
-            Log.println(Log.DEBUG, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
-        }
+        final StackTraceElement[] stack = new Throwable().getStackTrace();
+        final int i = 1;
+        final StackTraceElement ste = stack[i];
+        Log.println(Log.DEBUG, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
     }
-
 
     public static void i(String message) {
-        if (TextUtils.isEmpty(message)) {
+        if (!DEVELOP_MODE || TextUtils.isEmpty(message)) {
             return;
         }
-        if (DEBUG.DEVELOP_MODE) {
-            final StackTraceElement[] stack = new Throwable().getStackTrace();
-            final int i = 1;
-            final StackTraceElement ste = stack[i];
-            Log.println(Log.INFO, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
-        }
+        final StackTraceElement[] stack = new Throwable().getStackTrace();
+        final int i = 1;
+        final StackTraceElement ste = stack[i];
+        Log.println(Log.INFO, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
     }
 
-
     public static void w(String message) {
-        if (TextUtils.isEmpty(message)) {
+        if (!DEVELOP_MODE || TextUtils.isEmpty(message)) {
             return;
         }
-        if (DEBUG.DEVELOP_MODE) {
-            final StackTraceElement[] stack = new Throwable().getStackTrace();
-            final int i = 1;
-            final StackTraceElement ste = stack[i];
-            Log.println(Log.WARN, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
-        }
+        final StackTraceElement[] stack = new Throwable().getStackTrace();
+        final int i = 1;
+        final StackTraceElement ste = stack[i];
+        Log.println(Log.WARN, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
     }
 
     public static void e(String message) {
-        if (TextUtils.isEmpty(message)) {
+        if (!DEVELOP_MODE || TextUtils.isEmpty(message)) {
             return;
         }
-        if (DEBUG.DEVELOP_MODE) {
-            final StackTraceElement[] stack = new Throwable().getStackTrace();
-            final int i = 1;
-            final StackTraceElement ste = stack[i];
-            Log.println(Log.ERROR, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
-        }
+        final StackTraceElement[] stack = new Throwable().getStackTrace();
+        final int i = 1;
+        final StackTraceElement ste = stack[i];
+        Log.println(Log.ERROR, LOG_TAG, String.format("[%s][%s][%s]%s", ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), message));
     }
 }

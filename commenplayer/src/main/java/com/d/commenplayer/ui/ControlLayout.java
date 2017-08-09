@@ -1,9 +1,12 @@
 package com.d.commenplayer.ui;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -13,7 +16,10 @@ import android.widget.TextView;
 
 import com.d.commenplayer.R;
 import com.d.commenplayer.listener.IMediaPlayerControl;
-import com.d.commenplayer.util.Util;
+import com.d.commenplayer.util.MUtil;
+import com.nineoldandroids.animation.ValueAnimator;
+
+import java.lang.ref.WeakReference;
 
 public class ControlLayout extends RelativeLayout {
     public final static int STATE_LOADING = 0;
@@ -22,9 +28,19 @@ public class ControlLayout extends RelativeLayout {
     public final static int STATE_COMPLETION = 3;
     public final static int STATE_ERROR = 4;
 
+    private final int TASK_STICK_TIME = 5000;
+
+    /**
+     * top
+     */
+    private FrameLayout top;
+    private ImageView ivBack;
+    private TextView tvTitle;
+
     /**
      * bottom
      */
+    private RelativeLayout bottom;
     private ImageView playPause;
     private TextView current;
     private SeekBar seekBar;
@@ -44,10 +60,46 @@ public class ControlLayout extends RelativeLayout {
     private TextView tipsBtn;
 
     private int duration;
+
+    private Handler handler = new Handler();
+    private StickTask stickTask;
+    private boolean stickTaskRunning;
+
+    private ValueAnimator animation;
+    private float factor;//进度因子:0-1
+    private int heightTop;
+    private int heightBottom;
+
+    private boolean isPortrait = true;
     private IMediaPlayerControl listener;
-    private boolean isPrepare = true;
-    private boolean isSupportGesture = true;
-    private boolean portrait = false;
+
+    static class StickTask implements Runnable {
+        private final WeakReference<ControlLayout> reference;
+
+        StickTask(ControlLayout layout) {
+            this.reference = new WeakReference<ControlLayout>(layout);
+        }
+
+        @Override
+        public void run() {
+            ControlLayout layout = reference.get();
+            if (layout == null || layout.getContext() == null || !layout.stickTaskRunning) {
+                return;
+            }
+            layout.startAnim();
+        }
+    }
+
+    private void reStartStickTask() {
+        stopStickTask();
+        stickTaskRunning = true;
+        handler.postDelayed(stickTask, TASK_STICK_TIME);
+    }
+
+    private void stopStickTask() {
+        stickTaskRunning = false;
+        handler.removeCallbacks(stickTask);
+    }
 
     public ControlLayout(Context context) {
         this(context, null);
@@ -65,15 +117,20 @@ public class ControlLayout extends RelativeLayout {
     private void init(Context context) {
         View root = LayoutInflater.from(context).inflate(R.layout.layout_control, this);
         initView(root);
+        initAnim();
+        heightTop = MUtil.dip2px(context, 42);
+        heightBottom = MUtil.dip2px(context, 42);
+        stickTask = new StickTask(this);
         playPause.setOnClickListener(onClickListener);
         fullscreen.setOnClickListener(onClickListener);
+        ivBack.setOnClickListener(onClickListener);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (!fromUser) {
                     return;
                 }
-                current.setText(Util.generateTime(Util.getPosition(progress, duration)));
+                current.setText(MUtil.generateTime(MUtil.getPosition(progress, duration)));
             }
 
             @Override
@@ -81,24 +138,36 @@ public class ControlLayout extends RelativeLayout {
                 if (listener != null) {
                     listener.lockProgress(true);//加锁
                 }
+                if (!isPortrait) {
+                    stopStickTask();
+                }
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (listener != null) {
-                    listener.seekTo(Util.getPosition(seekBar.getProgress(), duration));
+                    listener.seekTo(MUtil.getPosition(seekBar.getProgress(), duration));
                     listener.lockProgress(false);//释放锁
+                }
+                if (!isPortrait) {
+                    reStartStickTask();
                 }
             }
         });
     }
 
     private void initView(View root) {
+        //top
+        top = (FrameLayout) root.findViewById(R.id.layout_player_top);
+        ivBack = (ImageView) root.findViewById(R.id.iv_player_back);
+        tvTitle = (TextView) root.findViewById(R.id.tv_player_title);
+
         //bottom
+        bottom = (RelativeLayout) root.findViewById(R.id.layout_player_bottom);
         playPause = (ImageView) root.findViewById(R.id.iv_player_play_pause);
         current = (TextView) root.findViewById(R.id.tv_player_current);
         seekBar = (SeekBar) root.findViewById(R.id.seek_player_progress);
-        seekBar.setMax(Util.SEEKBAR_MAX);
+        seekBar.setMax(MUtil.SEEKBAR_MAX);
         total = (TextView) root.findViewById(R.id.tv_player_total);
         fullscreen = (ImageView) root.findViewById(R.id.iv_player_fullscreen);
 
@@ -111,24 +180,64 @@ public class ControlLayout extends RelativeLayout {
         tipsBtn = (TextView) root.findViewById(R.id.tv_player_tips_btn);
     }
 
+    private void initAnim() {
+        animation = ValueAnimator.ofFloat(0f, 1f);
+        animation.setDuration(250);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (isPortrait) {
+                    return;
+                }
+                factor = (float) animation.getAnimatedValue();//更新进度因子
+                top.scrollTo(0, (int) (heightTop * factor));
+                bottom.scrollTo(0, (int) (-heightBottom * factor));
+                if (listener != null) {
+                    listener.onAnimationUpdate(factor);
+                }
+            }
+        });
+    }
+
+    private void startAnim() {
+        if (animation != null) {
+            if (factor == 0) {
+                animation.setFloatValues(0, 1);//dismiss
+            } else {
+                animation.setFloatValues(1, 0);//show
+                reStartStickTask();
+            }
+            animation.start();
+        }
+    }
+
+    private void stopAnim() {
+        if (animation != null) {
+            animation.end();
+        }
+    }
+
     public void setState(int state) {
         switch (state) {
             case STATE_LOADING:
                 setPlayerVisibility(VISIBLE, GONE, GONE);
+                setControlVisibility(INVISIBLE, INVISIBLE);
                 break;
             case STATE_PREPARED:
                 setPlayerVisibility(GONE, GONE, VISIBLE);
-                setControlVisibility(listener == null || listener.isLive() ? INVISIBLE : VISIBLE);
+                setControlVisibility(listener == null || listener.isLive() ? INVISIBLE : VISIBLE, VISIBLE);
                 break;
             case STATE_MOBILE_NET:
                 setPlayerVisibility(GONE, VISIBLE, GONE);
-                setControlVisibility(INVISIBLE);
+                setControlVisibility(INVISIBLE, INVISIBLE);
                 setControl("当前为移动网络，是否继续播放？", "继续播放", new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         setPlayerVisibility(GONE, GONE, VISIBLE);
-                        setControlVisibility(listener == null || listener.isLive() ? INVISIBLE : VISIBLE);
+                        setControlVisibility(listener == null || listener.isLive() ? INVISIBLE : VISIBLE, VISIBLE);
                         if (listener != null) {
+                            listener.ignoreMobileNet();
                             listener.start();
                         }
                     }
@@ -136,7 +245,7 @@ public class ControlLayout extends RelativeLayout {
                 break;
             case STATE_COMPLETION:
                 setPlayerVisibility(GONE, VISIBLE, GONE);
-                setControlVisibility(INVISIBLE);
+                setControlVisibility(INVISIBLE, INVISIBLE);
                 setControl("播放结束，是否重新播放？", "重新播放", new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -149,7 +258,7 @@ public class ControlLayout extends RelativeLayout {
                 break;
             case STATE_ERROR:
                 setPlayerVisibility(GONE, VISIBLE, GONE);
-                setControlVisibility(INVISIBLE);
+                setControlVisibility(INVISIBLE, INVISIBLE);
                 setControl("播放失败，是否重试？", "重试", new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -171,12 +280,18 @@ public class ControlLayout extends RelativeLayout {
         }
     }
 
-    private void setControlVisibility(int visibility) {
-        playPause.setVisibility(visibility);
-        current.setVisibility(visibility);
-        seekBar.setVisibility(visibility);
-        total.setVisibility(visibility);
-        fullscreen.setVisibility(visibility);
+    /**
+     * 设置底部控制显示状态
+     *
+     * @param visibility0: 控制按钮
+     * @param visibility1: 全屏按钮
+     */
+    private void setControlVisibility(int visibility0, int visibility1) {
+        playPause.setVisibility(visibility0);
+        current.setVisibility(visibility0);
+        seekBar.setVisibility(visibility0);
+        total.setVisibility(visibility0);
+        fullscreen.setVisibility(visibility1);
     }
 
     private void setControl(String text, String button, View.OnClickListener l) {
@@ -192,11 +307,37 @@ public class ControlLayout extends RelativeLayout {
         position = Math.min(position, duration);
         position = Math.max(position, 0);
         if (duration > 0) {
-            seekBar.setProgress(Util.getProgress(position, duration));
-            seekBar.setSecondaryProgress(Util.getSecondaryProgress(bufferPercentage));
-            current.setText(Util.generateTime(position));
-            total.setText(Util.generateTime(duration));
+            seekBar.setProgress(MUtil.getProgress(position, duration));
+            seekBar.setSecondaryProgress(MUtil.getSecondaryProgress(bufferPercentage));
+            current.setText(MUtil.generateTime(position));
+            total.setText(MUtil.generateTime(duration));
             this.duration = duration;
+        }
+    }
+
+    public void toggleStick() {
+        if (factor != 0 && factor != 1) {
+            return;
+        }
+        stopStickTask();
+        startAnim();
+    }
+
+    public void onConfigurationChanged(boolean isPortrait) {
+        this.isPortrait = isPortrait;
+        stopAnim();
+        stopStickTask();
+        factor = 0;
+        top.scrollTo(0, 0);
+        bottom.scrollTo(0, 0);
+        bottom.setVisibility(VISIBLE);
+        if (isPortrait) {
+            top.setVisibility(GONE);
+            fullscreen.setImageResource(R.drawable.ic_player_fullscreen_in);
+        } else {
+            top.setVisibility(VISIBLE);
+            fullscreen.setImageResource(R.drawable.ic_player_fullscreen_out);
+            reStartStickTask();
         }
     }
 
@@ -216,6 +357,10 @@ public class ControlLayout extends RelativeLayout {
                     playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_player_pause));
                 }
             } else if (id == R.id.iv_player_fullscreen) {
+                if (listener != null) {
+                    listener.toggleOrientation();
+                }
+            } else if (id == R.id.iv_player_back) {
                 if (listener != null) {
                     listener.toggleOrientation();
                 }

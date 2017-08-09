@@ -29,7 +29,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginTop="8dp"
             android:max="100"
-            android:progressDrawable="@drawable/seek_adjust" />
+            android:progressDrawable="@drawable/seekbar_adjust" />
     </LinearLayout>
 
     <!--调节亮度-->
@@ -57,7 +57,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginTop="8dp"
             android:max="100"
-            android:progressDrawable="@drawable/seek_adjust" />
+            android:progressDrawable="@drawable/seekbar_adjust" />
     </LinearLayout>
 
     <!--调节声音-->
@@ -85,6 +85,6 @@
             android:layout_marginBottom="4dp"
             android:layout_marginTop="8dp"
             android:max="100"
-            android:progressDrawable="@drawable/seek_adjust" />
+            android:progressDrawable="@drawable/seekbar_adjust" />
     </LinearLayout>
 </merge>

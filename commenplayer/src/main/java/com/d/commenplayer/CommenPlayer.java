@@ -1,12 +1,10 @@
 package com.d.commenplayer;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -17,18 +15,16 @@ import android.widget.FrameLayout;
 
 import com.d.commenplayer.listener.IMediaPlayerControl;
 import com.d.commenplayer.listener.IPlayerListener;
-import com.d.commenplayer.listener.OnNetChangeListener;
-import com.d.commenplayer.listener.OnShowThumbnailListener;
+import com.d.commenplayer.listener.IRenderView;
+import com.d.commenplayer.listener.OnAnimatorUpdateListener;
+import com.d.commenplayer.listener.OnNetListener;
 import com.d.commenplayer.media.IjkVideoView;
+import com.d.commenplayer.media.TextureRenderView;
 import com.d.commenplayer.ui.ControlLayout;
 import com.d.commenplayer.ui.TouchLayout;
-import com.d.commenplayer.util.Constans;
-import com.d.commenplayer.util.NetChangeReceiver;
-import com.d.commenplayer.util.Util;
+import com.d.commenplayer.util.MUtil;
 
 import java.lang.ref.WeakReference;
-
-import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
  * CommenPlayer
@@ -36,28 +32,24 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  */
 public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     private Activity activity;
-
     private IjkVideoView player;
     private TouchLayout touchLayout;
     private ControlLayout control;
-    private boolean isPortrait = true;//true:竖屏 false:横屏
-    public boolean progressLock;//进度锁
-
-    private IPlayerListener listener;
-    private NetChangeReceiver netChangeReceiver;
-    private OnNetChangeListener netChangeListener;//网络监听器
-    private boolean isListenNetChange;//是否监听网络连接状态变化
-
-    private boolean live;
-    private String url;
 
     private Handler handler = new Handler();
     private ProgressTask progressTask;
     private boolean progressTaskRunning;
-
+    private boolean progressLock;//进度锁
     private final int TASK_LOOP_TIME = 1000;
 
-    static class ProgressTask implements Runnable {
+    private boolean live;
+    private String url;
+    private boolean isPortrait = true;//true:竖屏 false:横屏
+    private IPlayerListener listener;
+    private OnAnimatorUpdateListener animatorUpdateListener;//stick浮层，动画
+    private OnNetListener netListener;
+
+    private static class ProgressTask implements Runnable {
         private final WeakReference<CommenPlayer> reference;
 
         ProgressTask(CommenPlayer layout) {
@@ -103,111 +95,23 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
         init(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CommenPlayer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
-    }
-
     private void init(final Context context) {
         activity = (Activity) context;
         progressTask = new ProgressTask(this);
         View root = LayoutInflater.from(context).inflate(R.layout.layout_player, this);
+        initView(root);
+    }
+
+    protected void initView(View root) {
         player = (IjkVideoView) root.findViewById(R.id.ijkplayer);
         touchLayout = (TouchLayout) root.findViewById(R.id.tl_touch);
         control = (ControlLayout) root.findViewById(R.id.cl_control);
         touchLayout.setIMediaPlayerControl(this);
         control.setIMediaPlayerControl(this);
-        player.setOnPlayerListener(new IPlayerListener() {
-            @Override
-            public void onLoading() {
-                //this func is not used here
-            }
-
-            @Override
-            public void onCompletion(IMediaPlayer mp) {
-                if (getContext() == null || control == null) {
-                    return;
-                }
-                control.setState(ControlLayout.STATE_COMPLETION);
-                if (listener != null) {
-                    listener.onCompletion(mp);
-                }
-            }
-
-            @Override
-            public void onPrepared(IMediaPlayer mp) {
-                if (getContext() == null || control == null) {
-                    return;
-                }
-                if (isListenNetChange && Constans.NET_STATUS == Constans.CONNECTED_MOBILE) {
-                    player.pause();
-                    control.setState(ControlLayout.STATE_MOBILE_NET);
-                } else {
-                    control.setState(ControlLayout.STATE_PREPARED);
-                }
-                reStartProgressTask();
-                if (listener != null) {
-                    listener.onPrepared(mp);
-                }
-            }
-
-            @Override
-            public boolean onError(IMediaPlayer mp, int what, int extra) {
-                if (getContext() == null || control == null) {
-                    return false;
-                }
-                control.setState(ControlLayout.STATE_ERROR);
-                if (listener != null) {
-                    listener.onError(mp, what, extra);
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-                if (getContext() == null || control == null) {
-                    return false;
-                }
-                if (listener != null) {
-                    listener.onInfo(mp, what, extra);
-                }
-                return false;
-            }
-
-            @Override
-            public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sarNum, int sarDen) {
-                if (getContext() == null || control == null) {
-                    return;
-                }
-                if (listener != null) {
-                    listener.onVideoSizeChanged(mp, width, height, sarNum, sarDen);
-                }
-            }
-        });
-        registerNetReceiver();
     }
 
-    /**
-     * 注册网络监听器
-     */
-    private void registerNetReceiver() {
-        if (netChangeReceiver == null) {
-            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-            netChangeReceiver = new NetChangeReceiver(activity);
-            netChangeReceiver.setNetChangeListener(netChangeListener);
-            activity.registerReceiver(netChangeReceiver, filter);
-        }
-    }
-
-    /**
-     * 销毁网络监听器
-     */
-    private void unRegisterNetReceiver() {
-        if (netChangeReceiver != null) {
-            activity.unregisterReceiver(netChangeReceiver);
-            netChangeReceiver = null;
-        }
+    public ControlLayout getControl() {
+        return control;
     }
 
     @Override
@@ -228,16 +132,20 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
 
     @Override
     public void play(String url) {
+        play(url, 0);
+    }
+
+    public void play(String url, int pos) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
         this.url = url;
+        player.play(url, pos);
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
         player.setVideoPath(url);
-        player.start();
-        control.setState(ControlLayout.STATE_LOADING);
-        if (listener != null) {
-            listener.onLoading();
-        }
     }
 
     @Override
@@ -246,8 +154,20 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     }
 
     @Override
+    public void ignoreMobileNet() {
+        if (netListener != null) {
+            netListener.onIgnoreMobileNet();
+        }
+    }
+
+    @Override
     public void setPlayerVisibility(int visibility) {
         player.setVisibility(visibility);
+    }
+
+    @Override
+    public void toggleStick() {
+        control.toggleStick();
     }
 
     @Override
@@ -267,8 +187,7 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
 
     @Override
     public void seekTo(int pos) {
-        pos = Math.max(pos, 0);
-        player.seekTo(pos);
+        player.seekTo(Math.max(pos, 0));
     }
 
     @Override
@@ -288,12 +207,12 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
 
     @Override
     public boolean canSeekBackward() {
-        return false;
+        return !live;
     }
 
     @Override
     public boolean canSeekForward() {
-        return false;
+        return !live;
     }
 
     @Override
@@ -330,30 +249,38 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     public void onConfigurationChanged(Configuration newConfig) {
         isPortrait = newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE;
         touchLayout.setVisibility(isPortrait ? GONE : VISIBLE);
+        control.onConfigurationChanged(isPortrait);
+        setScaleType(IRenderView.AR_ASPECT_FIT_PARENT);
+    }
+
+    @Override
+    public void onAnimationUpdate(float factor) {
+        if (animatorUpdateListener != null) {
+            animatorUpdateListener.onAnimationUpdate(factor);
+        }
     }
 
     @Override
     public void toggleOrientation() {
-        if (Util.getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } else {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
+        activity.setRequestedOrientation(isPortrait ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
     public void onResume() {
         player.onResume();
+        reStartProgressTask();
     }
 
     @Override
     public void onPause() {
+        stopProgressTask();
         player.onPause();
     }
 
     @Override
     public boolean onBackPress() {
-        if (Util.getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (!isPortrait) {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             return true;
         }
@@ -362,34 +289,37 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
 
     @Override
     public void onDestroy() {
-        stopProgressTask();
-        unRegisterNetReceiver();
         player.onDestroy();
-    }
-
-    public CommenPlayer setListenNetChange(boolean isListenNetChange) {
-        this.isListenNetChange = isListenNetChange;
-        return this;
-    }
-
-    public CommenPlayer setNetChangeListener(OnNetChangeListener netChangeListener) {
-        this.netChangeListener = netChangeListener;
-        if (netChangeReceiver != null) {
-            netChangeReceiver.setNetChangeListener(netChangeListener);
-        }
-        return this;
     }
 
     public CommenPlayer setOnPlayerListener(IPlayerListener listener) {
         this.listener = listener;
+        this.player.setOnPlayerListener(listener);
         return this;
     }
 
-    public CommenPlayer setThumbnail(OnShowThumbnailListener listener) {
-        if (listener != null) {
-            // TODO: @Dsiner thumbnail 2017/7/17
-            listener.onShowThumbnail(null);
-        }
+    public CommenPlayer setOnAnimatorUpdateListener(OnAnimatorUpdateListener listener) {
+        this.animatorUpdateListener = listener;
         return this;
+    }
+
+    public CommenPlayer setOnNetListener(OnNetListener listener) {
+        this.netListener = listener;
+        return this;
+    }
+
+    /**
+     * 获取视频截图
+     */
+    public Bitmap getSnapShot() {
+        IRenderView renderView = player.getRenderView();
+        if (renderView == null) {
+            return null;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
+                && renderView instanceof TextureRenderView) {
+            return ((TextureRenderView) renderView).getBitmap();
+        }
+        return MUtil.getFrame(activity, url, getCurrentPosition());
     }
 }

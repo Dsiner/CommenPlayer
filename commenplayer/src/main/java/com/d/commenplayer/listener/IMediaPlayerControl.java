@@ -23,9 +23,16 @@ public interface IMediaPlayerControl extends MediaController.MediaPlayerControl 
     String getUrl();
 
     /**
+     * 忽略移动网络时流量提醒
+     */
+    void ignoreMobileNet();
+
+    /**
      * display setting
      */
     void setPlayerVisibility(int visibility);
+
+    void toggleStick();
 
     void lockProgress(boolean lock);
 
@@ -36,6 +43,8 @@ public interface IMediaPlayerControl extends MediaController.MediaPlayerControl 
     int toggleAspectRatio();
 
     void onConfigurationChanged(Configuration newConfig);
+
+    void onAnimationUpdate(float factor);
 
     void toggleOrientation();
 

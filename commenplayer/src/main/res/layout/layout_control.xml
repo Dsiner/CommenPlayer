@@ -3,88 +3,103 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/layout_player_top"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/bg_title"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="42dp"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_bg_top" />
 
         <ImageView
             android:id="@+id/iv_player_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="14dp"
-            android:scaleType="centerInside"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="12dp"
             android:src="@drawable/ic_player_back" />
 
         <TextView
             android:id="@+id/tv_player_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="45dp"
             android:gravity="center_vertical" />
-    </LinearLayout>
+    </FrameLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_player_bottom"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:id="@+id/v_player_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_bg_bottom" />
 
         <ImageView
             android:id="@+id/iv_player_play_pause"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="6dp"
-            android:src="@drawable/ic_player_pause" />
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_player_pause"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_player_current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_player_play_pause"
             android:text="00:00"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            android:textSize="13dp"
+            android:visibility="gone" />
 
         <SeekBar
             android:id="@+id/seek_player_progress"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1.0"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tv_player_total"
+            android:layout_toRightOf="@+id/tv_player_current"
             android:background="@null"
-            android:max="100"
-            android:maxHeight="4dp"
-            android:minHeight="4dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            android:progressDrawable="@drawable/seek_bottom_progress"
-            android:thumb="@drawable/seek_bottom_thumb" />
+            android:maxHeight="2dp"
+            android:minHeight="2dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:progressDrawable="@drawable/seekbar_play"
+            android:thumb="@drawable/seekbar_play_thumb"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_player_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_player_fullscreen"
             android:text="00:00"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            android:textSize="13dp"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_player_fullscreen"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingRight="12dp"
-            android:scaleType="center"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:padding="12dp"
             android:src="@drawable/ic_player_fullscreen_in" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/prb_player_loading"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:indeterminateDrawable="@drawable/loading"
@@ -95,7 +110,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_player_tips_text"

@@ -17,10 +17,9 @@
 
 package com.d.commenplayer.media;
 
-import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -49,7 +48,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             IRenderView.AR_16_9_FIT_PARENT,
             IRenderView.AR_4_3_FIT_PARENT};
 
-    private Context context;
+    private Activity mActivity;
     private Uri uri;
     private Map<String, String> headers;
     private IMediaPlayer mediaPlayer = null;
@@ -71,6 +70,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     private boolean isLive = false;// is Live mode
     private boolean isPause = false;
+    private int pausePos;
     private IPlayerListener listener;
     private boolean playerSupport;
 
@@ -89,14 +89,8 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         init(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public IjkVideoView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
-    }
-
     private void init(Context context) {
-        this.context = context.getApplicationContext();
+        this.mActivity = (Activity) context;
         // init player
         try {
             IjkMediaPlayer.loadLibrariesOnce(null);
@@ -113,26 +107,30 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     }
 
     private void initBackground() {
-        boolean enable = new Settings(context).getEnableBackgroundPlay();
+        boolean enable = new Settings(mActivity.getApplicationContext()).getEnableBackgroundPlay();
         if (enable) {
             MediaPlayerService.intentToStart(getContext());
-            MediaPlayerService.getMediaManager(context);
+            MediaPlayerService.getMediaManager(mActivity);
         } else {
             getManager();
         }
     }
 
     private MediaManager getManager() {
-        return MediaManager.instance(context);
+        return MediaManager.instance(mActivity);
+    }
+
+    public IRenderView getRenderView() {
+        return renderView;
     }
 
     private void addRenderView() {
-        IRenderView renderView = Factory.initRenders(context);
+        IRenderView renderView = Factory.initRenders(mActivity);
         if (this.renderView != null) {
             if (mediaPlayer != null) {
                 mediaPlayer.setDisplay(null);
             }
-            removeView(this.renderView.getView());
+            removeAllViews();
             this.renderView.removeRenderCallback(mSHCallback);
             this.renderView = null;
         }
@@ -303,11 +301,19 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     @Override
     public void onLoading() {
-
+        if (mActivity == null || mActivity.isFinishing()) {
+            return;
+        }
+        if (listener != null) {
+            listener.onLoading();
+        }
     }
 
     @Override
     public void onCompletion(IMediaPlayer mp) {
+        if (mActivity == null || mActivity.isFinishing()) {
+            return;
+        }
         if (listener != null) {
             listener.onCompletion(mp);
         }
@@ -315,6 +321,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     @Override
     public void onPrepared(IMediaPlayer mp) {
+        if (mActivity == null || mActivity.isFinishing()) {
+            return;
+        }
         setArgs(mp);
         if (videoWidth != 0 && videoHeight != 0) {
             if (renderView != null) {
@@ -347,17 +356,25 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     @Override
     public boolean onError(IMediaPlayer mp, int what, int extra) {
+        if (mActivity == null || mActivity.isFinishing()) {
+            return false;
+        }
         return listener != null && listener.onError(mp, what, extra);
     }
 
     @Override
     public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+        //当what为MEDIA_INFO_VIDEO_RENDERING_START时播放第一帧画面了
+        if (mActivity == null || mActivity.isFinishing()) {
+            return false;
+        }
         switch (what) {
             case IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
                 videoRotationDegree = extra;
                 MLog.d("MEDIA_INFO_VIDEO_ROTATION_CHANGED: " + extra);
-                if (renderView != null)
+                if (renderView != null) {
                     renderView.setVideoRotation(extra);
+                }
                 break;
             //case IMediaPlayer.MEDIA_INFO_...
         }
@@ -366,6 +383,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     @Override
     public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sarNum, int sarDen) {
+        if (mActivity == null || mActivity.isFinishing()) {
+            return;
+        }
         setArgs(mp);
         if (videoWidth != 0 && videoHeight != 0) {
             if (renderView != null) {
@@ -408,25 +428,29 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         setVideoURI(uri, null);
     }
 
+    public void play(String url, int pos) {
+        setVideoPath(url);
+        seekTo(pos);
+        start();
+        onLoading();
+    }
+
     public void onResume() {
         if (isPause) {
             isPause = false;
-            if (isLive) {
-                prepare();
-            } else {
-                getManager().start();
-            }
+            prepare();
+            seekTo(isLive ? 0 : pausePos);
+            start();
+            onLoading();
         }
     }
 
     public void onPause() {
-        if (!isPlaying()) {
-            return;
-        }
         isPause = true;
         if (isLive) {
             release(false);
         } else {
+            pausePos = getCurrentPosition();
             getManager().pause();
         }
     }

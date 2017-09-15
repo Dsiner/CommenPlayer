@@ -55,6 +55,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
 
     private GestureDetector gestureDetector;
     private IMediaPlayerControl listener;
+    private OnGestureListener gestureListener;
 
     public TouchLayout(@NonNull Context context) {
         super(context);
@@ -219,6 +220,9 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
         @Override
         public boolean onDown(MotionEvent e) {
             scrollValid = false;
+            if (gestureListener != null) {
+                gestureListener.onTouch();
+            }
             return super.onDown(e);
         }
 
@@ -243,5 +247,13 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
 
     public void setIMediaPlayerControl(IMediaPlayerControl listener) {
         this.listener = listener;
+    }
+
+    public interface OnGestureListener {
+        void onTouch();
+    }
+
+    public void setOnGestureListener(OnGestureListener l) {
+        this.gestureListener = l;
     }
 }

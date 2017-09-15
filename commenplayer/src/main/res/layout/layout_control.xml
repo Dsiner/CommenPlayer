@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
         android:id="@+id/layout_player_top"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="87dp"
+        android:layout_marginTop="-45dp"
         android:visibility="gone">
 
         <View
+            android:id="@+id/v_player_top_gradient"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="-25dp"
             android:background="@drawable/gradient_bg_top" />
 
         <ImageView
             android:id="@+id/iv_player_back"
             android:layout_width="42dp"
             android:layout_height="42dp"
+            android:layout_marginTop="45dp"
             android:padding="12dp"
             android:src="@drawable/ic_player_back" />
 
@@ -26,7 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="45dp"
-            android:gravity="center_vertical" />
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="45dp"
+            android:gravity="center_vertical"
+            android:singleLine="true" />
     </FrameLayout>
 
     <RelativeLayout
@@ -36,9 +41,10 @@
         android:layout_alignParentBottom="true">
 
         <View
-            android:id="@+id/v_player_bottom"
+            android:id="@+id/v_player_bottom_gradient"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="-25dp"
             android:background="@drawable/gradient_bg_bottom" />
 
         <ImageView
@@ -132,4 +138,4 @@
             android:textColor="#ffffff"
             android:textSize="10dp" />
     </LinearLayout>
-</RelativeLayout>
+</merge>

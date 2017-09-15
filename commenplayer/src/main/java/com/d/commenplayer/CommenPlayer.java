@@ -45,7 +45,6 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     private boolean live;
     private String url;
     private boolean isPortrait = true;//true:竖屏 false:横屏
-    private IPlayerListener listener;
     private OnAnimatorUpdateListener animatorUpdateListener;//stick浮层，动画
     private OnNetListener netListener;
 
@@ -53,7 +52,7 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
         private final WeakReference<CommenPlayer> reference;
 
         ProgressTask(CommenPlayer layout) {
-            this.reference = new WeakReference<CommenPlayer>(layout);
+            this.reference = new WeakReference<>(layout);
         }
 
         @Override
@@ -112,6 +111,10 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
 
     public ControlLayout getControl() {
         return control;
+    }
+
+    public TouchLayout getTouch() {
+        return touchLayout;
     }
 
     @Override
@@ -248,9 +251,24 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         isPortrait = newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE;
+        if (isPortrait) {
+            MUtil.showSystemUIFource(activity, control, touchLayout);
+        } else {
+            MUtil.hideSystemUI(activity, control, touchLayout);
+            MUtil.showSystemUI(activity, control, touchLayout);
+        }
         touchLayout.setVisibility(isPortrait ? GONE : VISIBLE);
         control.onConfigurationChanged(isPortrait);
         setScaleType(IRenderView.AR_ASPECT_FIT_PARENT);
+    }
+
+    @Override
+    public void toggleSystemUI(boolean show) {
+        if (show) {
+            MUtil.showSystemUI(activity, control, touchLayout);
+        } else {
+            MUtil.hideSystemUI(activity, control, touchLayout);
+        }
     }
 
     @Override
@@ -293,7 +311,6 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     }
 
     public CommenPlayer setOnPlayerListener(IPlayerListener listener) {
-        this.listener = listener;
         this.player.setOnPlayerListener(listener);
         return this;
     }

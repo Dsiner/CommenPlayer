@@ -34,6 +34,8 @@ public interface IMediaPlayerControl extends MediaController.MediaPlayerControl 
 
     void toggleStick();
 
+    void toggleSystemUI(boolean show);
+
     void lockProgress(boolean lock);
 
     void progressTo(int position, int bufferPercentage);

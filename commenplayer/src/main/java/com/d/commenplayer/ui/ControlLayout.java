@@ -1,5 +1,6 @@
 package com.d.commenplayer.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.d.commenplayer.R;
 import com.d.commenplayer.listener.IMediaPlayerControl;
 import com.d.commenplayer.util.MUtil;
+import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
 
 import java.lang.ref.WeakReference;
@@ -59,6 +61,7 @@ public class ControlLayout extends RelativeLayout {
     private TextView tipsText;
     private TextView tipsBtn;
 
+    private Activity activity;
     private int duration;
 
     private Handler handler = new Handler();
@@ -66,9 +69,9 @@ public class ControlLayout extends RelativeLayout {
     private boolean stickTaskRunning;
 
     private ValueAnimator animation;
+    private ValueAnimator.AnimatorUpdateListener amListener;
     private float factor;//进度因子:0-1
-    private int heightTop;
-    private int heightBottom;
+    private int height42;
 
     private boolean isPortrait = true;
     private IMediaPlayerControl listener;
@@ -77,7 +80,7 @@ public class ControlLayout extends RelativeLayout {
         private final WeakReference<ControlLayout> reference;
 
         StickTask(ControlLayout layout) {
-            this.reference = new WeakReference<ControlLayout>(layout);
+            this.reference = new WeakReference<>(layout);
         }
 
         @Override
@@ -115,11 +118,13 @@ public class ControlLayout extends RelativeLayout {
     }
 
     private void init(Context context) {
+        this.activity = (Activity) context;
         View root = LayoutInflater.from(context).inflate(R.layout.layout_control, this);
         initView(root);
+        setClipToPadding(false);
+        setClipChildren(false);
         initAnim();
-        heightTop = MUtil.dip2px(context, 42);
-        heightBottom = MUtil.dip2px(context, 42);
+        height42 = MUtil.dip2px(context, 42);
         stickTask = new StickTask(this);
         playPause.setOnClickListener(onClickListener);
         fullscreen.setOnClickListener(onClickListener);
@@ -184,36 +189,68 @@ public class ControlLayout extends RelativeLayout {
         animation = ValueAnimator.ofFloat(0f, 1f);
         animation.setDuration(250);
         animation.setInterpolator(new LinearInterpolator());
-        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        amListener = new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 if (isPortrait) {
                     return;
                 }
                 factor = (float) animation.getAnimatedValue();//更新进度因子
-                top.scrollTo(0, (int) (heightTop * factor));
-                bottom.scrollTo(0, (int) (-heightBottom * factor));
+                top.setVisibility(factor == 1 ? GONE : VISIBLE);
+                top.scrollTo(0, (int) (height42 * factor));
+                bottom.scrollTo(0, (int) (-height42 * factor));
                 if (listener != null) {
                     listener.onAnimationUpdate(factor);
                 }
+            }
+        };
+        animation.addUpdateListener(amListener);
+        animation.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
     }
 
     private void startAnim() {
+        stopAnim();
         if (animation != null) {
             if (factor == 0) {
+                if (listener != null) {
+                    listener.toggleSystemUI(false);
+                }
                 animation.setFloatValues(0, 1);//dismiss
             } else {
+                if (listener != null) {
+                    listener.toggleSystemUI(true);
+                }
                 animation.setFloatValues(1, 0);//show
                 reStartStickTask();
             }
+            animation.addUpdateListener(amListener);
             animation.start();
         }
     }
 
     private void stopAnim() {
         if (animation != null) {
+            animation.removeUpdateListener(amListener);
             animation.end();
         }
     }

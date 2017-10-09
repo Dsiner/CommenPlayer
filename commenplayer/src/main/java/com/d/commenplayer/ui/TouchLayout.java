@@ -35,6 +35,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
     private int screenWidth;
     private LinearLayout llytProgress;
     private TextView tvProgress;
+    private ProgressBar prbProgress;
     private LinearLayout llytBrightness;
     private ProgressBar prbBrightness;
     private LinearLayout llytVolume;
@@ -92,6 +93,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
         llytBrightness = (LinearLayout) root.findViewById(R.id.llyt_player_adj_brightness);
         llytVolume = (LinearLayout) root.findViewById(R.id.llyt_player_adj_volume);
         tvProgress = (TextView) root.findViewById(R.id.tv_player_adj_prg);
+        prbProgress = (ProgressBar) root.findViewById(R.id.prb_player_adj_prg);
         prbBrightness = (ProgressBar) root.findViewById(R.id.prb_player_adj_brightness);
         prbVolume = (ProgressBar) root.findViewById(R.id.prb_player_adj_volume);
     }
@@ -110,6 +112,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
         newPosition = (int) (1f * position + 1f * duration * percent);
         newPosition = Math.min(newPosition, duration);
         newPosition = Math.max(newPosition, 0);
+        prbProgress.setProgress((int) (newPosition * 1.0 / duration * 100));
         tvProgress.setText(MUtil.generateTime(newPosition));
         listener.progressTo(newPosition, 0);
     }

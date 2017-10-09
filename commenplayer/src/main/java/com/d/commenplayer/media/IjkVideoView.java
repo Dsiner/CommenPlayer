@@ -175,7 +175,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             // not ready for playback just yet, will try again later
             return;
         }
-        mediaPlayer = getManager().prepare(uri, headers, false);
+        mediaPlayer = getManager().prepare(mActivity.getApplicationContext(), uri, headers, false);
         getManager().setListener(this);
         addRenderView();
     }
@@ -240,7 +240,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * release the media player in any state
      */
     public void release(boolean clearTargetState) {
-        getManager().release(clearTargetState);
+        getManager().release(mActivity.getApplicationContext(), clearTargetState);
         mediaPlayer = null;
     }
 

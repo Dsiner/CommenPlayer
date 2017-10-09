@@ -25,7 +25,6 @@ import android.support.annotation.Nullable;
 
 import com.d.commenplayer.media.MediaManager;
 
-
 public class MediaPlayerService extends Service {
     private static MediaManager mManager;
 
@@ -54,7 +53,7 @@ public class MediaPlayerService extends Service {
 
     @Override
     public void onDestroy() {
-        mManager.release(true);
+        mManager.release(getApplicationContext(), true);
         mManager = null;
         super.onDestroy();
     }

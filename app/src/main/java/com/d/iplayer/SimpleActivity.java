@@ -1,11 +1,9 @@
 package com.d.iplayer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,6 +11,8 @@ import com.d.commenplayer.CommenPlayer;
 import com.d.commenplayer.listener.IPlayerListener;
 import com.d.commenplayer.listener.OnNetListener;
 import com.d.commenplayer.ui.ControlLayout;
+import com.d.commenplayer.util.MLog;
+import com.d.commenplayer.util.MUtil;
 import com.d.iplayer.net.NetConstans;
 import com.d.iplayer.net.NetEvent;
 
@@ -23,9 +23,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public class SimpleActivity extends Activity {
-    private String url1 = "http://vpls.cdn.videojj.com/scene/video02_720p.mp4";
-    private String url2 = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
-    private String url3 = "http://tanzi27niu.cdsb.mobi/wps/wp-content/uploads/2017/05/2017-05-17_17-33-30.mp4";
     private CommenPlayer player;
     private boolean ignoreNet;
 
@@ -92,7 +89,7 @@ public class SimpleActivity extends Activity {
 
             }
         });
-        player.play(url1);
+        player.play(getResources().getString(R.string.url1));
     }
 
     @Override
@@ -120,7 +117,7 @@ public class SimpleActivity extends Activity {
             lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
             player.setLayoutParams(lp);
         } else {
-            lp.height = dip2px(getApplicationContext(), 180);
+            lp.height = MUtil.dip2px(getApplicationContext(), 180);
             player.setLayoutParams(lp);
         }
         if (player != null) {
@@ -138,7 +135,10 @@ public class SimpleActivity extends Activity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetEvent(NetEvent event) {
-
+        if (event == null || isFinishing()) {
+            return;
+        }
+        MLog.d("dsiner: Net_" + event.status);
     }
 
     @Override
@@ -153,10 +153,5 @@ public class SimpleActivity extends Activity {
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
-    }
-
-    public static int dip2px(Context context, float dpValue) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return (int) (dpValue * (metrics.densityDpi / 160f));
     }
 }

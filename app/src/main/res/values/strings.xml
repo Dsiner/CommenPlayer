@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">IPlayer</string>
+
+    <string name="url1">http://vpls.cdn.videojj.com/scene/video02_720p.mp4</string>
+    <string name="url2">http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</string>
+    <string name="url3">http://tanzi27niu.cdsb.mobi/wps/wp-content/uploads/2017/05/2017-05-17_17-33-30.mp4</string>
+    <string name="url4">http://9890.vod.myqcloud.com/9890_9c1fa3e2aea011e59fc841df10c92278.f20.mp4</string>
+    <string name="url5">http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8</string>
+    <string name="url6">https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8</string>
+    <string name="url7">rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov</string>
+    <string name="url8">rtmp://live.hkstv.hk.lxdns.com/live/hks</string>
+
 </resources>

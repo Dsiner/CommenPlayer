@@ -5,8 +5,9 @@
 CommenPlayer 是一个适用于 Android 平台的视频播放器，基于ijkplayer、vlc、Android MediaPlayer、ExoPlayer
 
 ## Branch
-- [master]()  - 基于 `ijkplayer` ，支持ijkplayer、Android MediaPlayer、ExoPlayer切换
-- [vlc]()  - 基于 `vlc` , 测试阶段
+- [master--](https://github.com/Dsiner/CommenPlayer)  - 支持格式最全，基于 `ijkplayer` ，支持ijkplayer、Android MediaPlayer、ExoPlayer切换
+- [lite](https://github.com/Dsiner/CommenPlayer/tree/lite)  - lite，基于 `ijkplayer` ，支持ijkplayer、Android MediaPlayer、ExoPlayer切换
+- [vlc](https://github.com/Dsiner/CommenPlayer/tree/vlc)  - 基于 `vlc` , 测试阶段
 
 ## Demo
 <p>

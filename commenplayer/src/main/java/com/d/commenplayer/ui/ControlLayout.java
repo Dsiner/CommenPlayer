@@ -119,7 +119,7 @@ public class ControlLayout extends RelativeLayout {
 
     private void init(Context context) {
         this.activity = (Activity) context;
-        View root = LayoutInflater.from(context).inflate(R.layout.layout_control, this);
+        View root = LayoutInflater.from(context).inflate(R.layout.lib_player_layout_control, this);
         initView(root);
         setClipToPadding(false);
         setClipChildren(false);
@@ -370,10 +370,10 @@ public class ControlLayout extends RelativeLayout {
         bottom.setVisibility(VISIBLE);
         if (isPortrait) {
             top.setVisibility(GONE);
-            fullscreen.setImageResource(R.drawable.ic_player_fullscreen_in);
+            fullscreen.setImageResource(R.drawable.lib_player_ic_fullscreen_in);
         } else {
             top.setVisibility(VISIBLE);
-            fullscreen.setImageResource(R.drawable.ic_player_fullscreen_out);
+            fullscreen.setImageResource(R.drawable.lib_player_ic_fullscreen_out);
             reStartStickTask();
         }
     }
@@ -388,10 +388,10 @@ public class ControlLayout extends RelativeLayout {
                 }
                 if (listener.isPlaying()) {
                     listener.pause();
-                    playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_player_play));
+                    playPause.setImageDrawable(getResources().getDrawable(R.drawable.lib_player_ic_play));
                 } else {
                     listener.start();
-                    playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_player_pause));
+                    playPause.setImageDrawable(getResources().getDrawable(R.drawable.lib_player_ic_pause));
                 }
             } else if (id == R.id.iv_player_fullscreen) {
                 if (listener != null) {

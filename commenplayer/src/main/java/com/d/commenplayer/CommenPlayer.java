@@ -97,7 +97,7 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     private void init(final Context context) {
         activity = (Activity) context;
         progressTask = new ProgressTask(this);
-        View root = LayoutInflater.from(context).inflate(R.layout.layout_player, this);
+        View root = LayoutInflater.from(context).inflate(R.layout.lib_player_layout_player, this);
         initView(root);
     }
 

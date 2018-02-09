@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginRight="-25dp"
-            android:background="@drawable/gradient_bg_top" />
+            android:background="@drawable/lib_player_gradient_bg_top" />
 
         <ImageView
             android:id="@+id/iv_player_back"
@@ -21,7 +21,7 @@
             android:layout_height="42dp"
             android:layout_marginTop="45dp"
             android:padding="12dp"
-            android:src="@drawable/ic_player_back" />
+            android:src="@drawable/lib_player_ic_back" />
 
         <TextView
             android:id="@+id/tv_player_title"
@@ -45,14 +45,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginRight="-25dp"
-            android:background="@drawable/gradient_bg_bottom" />
+            android:background="@drawable/lib_player_gradient_bg_bottom" />
 
         <ImageView
             android:id="@+id/iv_player_play_pause"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:padding="12dp"
-            android:src="@drawable/ic_player_pause"
+            android:src="@drawable/lib_player_ic_pause"
             android:visibility="gone" />
 
         <TextView
@@ -78,8 +78,8 @@
             android:minHeight="2dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:progressDrawable="@drawable/seekbar_play"
-            android:thumb="@drawable/seekbar_play_thumb"
+            android:progressDrawable="@drawable/lib_player_seekbar_play"
+            android:thumb="@drawable/lib_player_seekbar_play_thumb"
             android:visibility="gone" />
 
         <TextView
@@ -99,7 +99,7 @@
             android:layout_height="42dp"
             android:layout_alignParentRight="true"
             android:padding="12dp"
-            android:src="@drawable/ic_player_fullscreen_in" />
+            android:src="@drawable/lib_player_ic_fullscreen_in" />
     </RelativeLayout>
 
     <ProgressBar
@@ -108,7 +108,7 @@
         android:layout_height="32dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:indeterminateDrawable="@drawable/loading"
+        android:indeterminateDrawable="@drawable/lib_player_loading"
         android:visibility="visible" />
 
     <LinearLayout
@@ -132,7 +132,7 @@
             android:layout_width="66dp"
             android:layout_height="26dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/corner_bg_control"
+            android:background="@drawable/lib_player_corner_bg_control"
             android:gravity="center"
             android:text="继续播放"
             android:textColor="#ffffff"

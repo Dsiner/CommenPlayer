@@ -36,7 +36,7 @@ public class AdapterPlayer extends FrameLayout {
     }
 
     private void init(Context context) {
-        View root = LayoutInflater.from(context).inflate(R.layout.layout_aplayer, this);
+        View root = LayoutInflater.from(context).inflate(R.layout.lib_player_layout_aplayer, this);
         initView(root);
     }
 

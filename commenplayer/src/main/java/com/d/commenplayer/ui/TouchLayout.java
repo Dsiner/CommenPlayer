@@ -76,7 +76,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
     private void init(Context context) {
         mActivity = (Activity) context;
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        View root = LayoutInflater.from(context).inflate(R.layout.layout_touch, this);
+        View root = LayoutInflater.from(context).inflate(R.layout.lib_player_layout_touch, this);
         initView(root);
         int[] size = MUtil.getScreenSize(mActivity);
         screenWidth = size[0];

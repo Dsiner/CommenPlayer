@@ -1,13 +1,9 @@
 # CommenPlayer for Android
 
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![API](https://img.shields.io/badge/API-9%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=9)
 
-CommenPlayer 是一个适用于 Android 平台的视频播放器，基于ijkplayer、vlc、Android MediaPlayer、ExoPlayer
-
-## Branch
-- [master](https://github.com/Dsiner/CommenPlayer)  - 支持格式最全，基于 `ijkplayer` ，支持ijkplayer、Android MediaPlayer、ExoPlayer切换
-- [lite](https://github.com/Dsiner/CommenPlayer/tree/lite)  - lite，基于 `ijkplayer` ，支持ijkplayer、Android MediaPlayer、ExoPlayer切换
-- [vlc](https://github.com/Dsiner/CommenPlayer/tree/vlc)  - 基于 `vlc` , 测试阶段
+CommenPlayer 是一个适用于 Android 平台的视频播放器，基于ijkplayer、Android MediaPlayer、ExoPlayer / vlc
 
 ## Demo
 <p>
@@ -16,8 +12,8 @@ CommenPlayer 是一个适用于 Android 平台的视频播放器，基于ijkplay
 
 ## Features
 - [x] 支持本地和网络视频播放
-- [x] 支持 M3U8、RTMP 、RTSP 协议的直播流媒体播放
-- [x] 支持常见的音视频文件播放（MP4、mp3、flv 等）
+- [x] 支持 M3U8、RTMP、RTSP、UDP 协议的直播流媒体播放
+- [x] 支持常见的音视频文件播放（MP4、mp3、flv等）
 - [x] 支持播放控制，进度显示
 - [x] 支持手势滑动调节播放进度、亮度、声音
 - [x] 支持画面尺寸切换（16：9，4：3，自适应，撑满等）

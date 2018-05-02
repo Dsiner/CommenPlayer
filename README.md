@@ -1,9 +1,14 @@
 # CommenPlayer for Android
 
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![API](https://img.shields.io/badge/API-9%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=9)
 
 CommenPlayer 是一个适用于 Android 平台的视频播放器，基于ijkplayer、Android MediaPlayer、ExoPlayer / vlc
+
+## Branch
+- [master](https://github.com/Dsiner/CommenPlayer)  - develop branch，dependencies，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
+- [ijk-lite](https://github.com/Dsiner/CommenPlayer/tree/ijk-lite)  - release branch，.so file，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
+- [ijk-default](https://github.com/Dsiner/CommenPlayer/tree/ijk-default)  - release branch，.so file，more codec/format，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
+- [vlc](https://github.com/Dsiner/CommenPlayer/tree/vlc)  - beta branch，base on `vlc`
 
 ## Demo
 <p>

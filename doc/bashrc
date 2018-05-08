@@ -1,0 +1,10 @@
+export JAVA_HOME=/home/dsiner/Dev/App/jdk1.8.0_131
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+
+export ANDROID_SDK=/home/dsiner/Dev/App/android-sdk-linux
+export PATH=${PATH}:$ANDROID_SDK/tools:$ANDROID_SDK/platform-tools
+
+export ANDROID_NDK=/home/dsiner/Dev/App/android-ndk-r13
+export PATH=$PATH:ANDROID_NDK

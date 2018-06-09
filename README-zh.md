@@ -2,15 +2,14 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![API](https://img.shields.io/badge/API-9%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=9)
-[![Readme](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87-brightgreen.svg)](https://github.com/Dsiner/CommenPlayer/blob/master/README-zh.md)
 
-> Video player for the Android platform based on ijkplayer, Android MediaPlayer, ExoPlayer / vlc
+> 一个适用于 Android 平台的视频播放器，基于ijkplayer、Android MediaPlayer、ExoPlayer / vlc
 
 ## Branch
-- [master](https://github.com/Dsiner/CommenPlayer)  - develop branch，dependencies，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
-- [ijk-lite](https://github.com/Dsiner/CommenPlayer/tree/ijk-lite-v0.8.8)  - release branch，.so file，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
-- [ijk-default](https://github.com/Dsiner/CommenPlayer/tree/ijk-default-v0.8.8)  - release branch，.so file，more codec/format，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
-- [vlc](https://github.com/Dsiner/CommenPlayer/tree/vlc)  - beta branch，base on `vlc`
+- [master](https://github.com/Dsiner/CommenPlayer)  - develop分支，依赖形式，支持格式较少、包体积较小，基于 `ijkplayer` ，支持 ijkplayer、Android MediaPlayer、ExoPlayer
+- [ijk-lite](https://github.com/Dsiner/CommenPlayer/tree/ijk-lite-v0.8.8)  - release分支，.so file，支持格式较少、包体积较小，基于 `ijkplayer` ，支持 ijkplayer、Android MediaPlayer、ExoPlayer
+- [ijk-default](https://github.com/Dsiner/CommenPlayer/tree/ijk-default-v0.8.8)  - release分支，.so file，支持格式全、包体积较大，基于 `ijkplayer` ，支持 ijkplayer、Android MediaPlayer、ExoPlayer
+- [vlc](https://github.com/Dsiner/CommenPlayer/tree/vlc)  - beta分支，基于 `vlc`
 
 ## Demo
 <p>
@@ -18,14 +17,14 @@
 </p>
 
 ## Features
-- [x] Supports local and network video playback
-- [x] Live streaming support for M3U8, RTMP, RTSP, UDP protocols
-- [x] Supports common audio and video file playback (MP4, mp3, flv, etc.)
-- [x] Support playback control, progress display
-- [x] Support gestures to adjust playback progress, brightness, sound
-- [x] Supports screen size switching (16:9, 4:3, adaptive, full, etc.)
-- [x] Supports horizontal and vertical screen switching, full screen mode, list playback, list playback/full screen mode switching
-- [x] Supports full screen immersive mode
+- [x] 支持本地和网络视频播放
+- [x] 支持 M3U8、RTMP、RTSP、UDP 协议的直播流媒体播放
+- [x] 支持常见的音视频文件播放（MP4、mp3、flv等）
+- [x] 支持播放控制，进度显示
+- [x] 支持手势滑动调节播放进度、亮度、声音
+- [x] 支持画面尺寸切换（16：9，4：3，自适应，撑满等）
+- [x] 支持横竖屏切换、全屏模式、列表播放、列表播放/全屏模式切换
+- [x] 支持全屏沉浸式模式
 
 ## Usage
 ```xml

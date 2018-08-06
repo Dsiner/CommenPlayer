@@ -34,6 +34,7 @@ import java.util.List;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public class ListActivity extends Activity {
+
     private Context context;
     private LRecyclerView list;
     private ViewGroup itemContainer;

@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">IPlayer</string>
+    <string name="app_name">CommenPlayer</string>
 
     <string name="url1">http://vpls.cdn.videojj.com/scene/video02_720p.mp4</string>
     <string name="url2">http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</string>
@@ -9,5 +10,4 @@
     <string name="url6">https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8</string>
     <string name="url7">rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov</string>
     <string name="url8">rtmp://live.hkstv.hk.lxdns.com/live/hks</string>
-
 </resources>

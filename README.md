@@ -93,7 +93,7 @@
 More usage see [Demo](app/src/main/java/com/d/iplayer/MainActivity.java)
 
 ## Contributors
-- [Anhar Ismail](https://github.com/anharismail) Logo design contribution
+- [Anhar Ismail](https://github.com/anharismail)  - Logo design contribution
 
 ## Thanks
 - [ijkplayer](https://github.com/Bilibili/ijkplayer)  - Video player based on ffplay

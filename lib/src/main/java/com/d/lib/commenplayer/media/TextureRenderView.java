@@ -32,7 +32,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.d.lib.commenplayer.listener.IRenderView;
-import com.d.lib.commenplayer.util.MLog;
+import com.d.lib.commenplayer.util.ULog;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -293,7 +293,7 @@ public class TextureRenderView extends TextureView implements IRenderView {
                 renderCallback.onSurfaceDestroyed(surfaceHolder);
             }
 
-            MLog.d("onSurfaceTextureDestroyed: destroy: " + mOwnSurfaceTexture);
+            ULog.d("onSurfaceTextureDestroyed: destroy: " + mOwnSurfaceTexture);
             return mOwnSurfaceTexture;
         }
 
@@ -308,47 +308,47 @@ public class TextureRenderView extends TextureView implements IRenderView {
         @Override
         public void releaseSurfaceTexture(SurfaceTexture surfaceTexture) {
             if (surfaceTexture == null) {
-                MLog.d("releaseSurfaceTexture: null");
+                ULog.d("releaseSurfaceTexture: null");
             } else if (mDidDetachFromWindow) {
                 if (surfaceTexture != mSurfaceTexture) {
-                    MLog.d("releaseSurfaceTexture: didDetachFromWindow(): release different SurfaceTexture");
+                    ULog.d("releaseSurfaceTexture: didDetachFromWindow(): release different SurfaceTexture");
                     surfaceTexture.release();
                 } else if (!mOwnSurfaceTexture) {
-                    MLog.d("releaseSurfaceTexture: didDetachFromWindow(): release detached SurfaceTexture");
+                    ULog.d("releaseSurfaceTexture: didDetachFromWindow(): release detached SurfaceTexture");
                     surfaceTexture.release();
                 } else {
-                    MLog.d("releaseSurfaceTexture: didDetachFromWindow(): already released by TextureView");
+                    ULog.d("releaseSurfaceTexture: didDetachFromWindow(): already released by TextureView");
                 }
             } else if (mWillDetachFromWindow) {
                 if (surfaceTexture != mSurfaceTexture) {
-                    MLog.d("releaseSuMrfaceTexture: willDetachFromWindow(): release different SurfaceTexture");
+                    ULog.d("releaseSuMrfaceTexture: willDetachFromWindow(): release different SurfaceTexture");
                     surfaceTexture.release();
                 } else if (!mOwnSurfaceTexture) {
-                    MLog.d("releaseSurfaceTexture: willDetachFromWindow(): re-attach SurfaceTexture to TextureView");
+                    ULog.d("releaseSurfaceTexture: willDetachFromWindow(): re-attach SurfaceTexture to TextureView");
                     setOwnSurfaceTexture(true);
                 } else {
-                    MLog.d("releaseSurfaceTexture: willDetachFromWindow(): will released by TextureView");
+                    ULog.d("releaseSurfaceTexture: willDetachFromWindow(): will released by TextureView");
                 }
             } else {
                 if (surfaceTexture != mSurfaceTexture) {
-                    MLog.d("releaseSurfaceTexture: alive: release different SurfaceTexture");
+                    ULog.d("releaseSurfaceTexture: alive: release different SurfaceTexture");
                     surfaceTexture.release();
                 } else if (!mOwnSurfaceTexture) {
-                    MLog.d("releaseSurfaceTexture: alive: re-attach SurfaceTexture to TextureView");
+                    ULog.d("releaseSurfaceTexture: alive: re-attach SurfaceTexture to TextureView");
                     setOwnSurfaceTexture(true);
                 } else {
-                    MLog.d("releaseSurfaceTexture: alive: will released by TextureView");
+                    ULog.d("releaseSurfaceTexture: alive: will released by TextureView");
                 }
             }
         }
 
         public void willDetachFromWindow() {
-            MLog.d("willDetachFromWindow()");
+            ULog.d("willDetachFromWindow()");
             mWillDetachFromWindow = true;
         }
 
         public void didDetachFromWindow() {
-            MLog.d("didDetachFromWindow()");
+            ULog.d("didDetachFromWindow()");
             mDidDetachFromWindow = true;
         }
     }

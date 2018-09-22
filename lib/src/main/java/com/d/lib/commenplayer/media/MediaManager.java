@@ -13,8 +13,8 @@ import android.widget.MediaController;
 import com.d.lib.commenplayer.listener.IPlayerListener;
 import com.d.lib.commenplayer.util.Factory;
 import com.d.lib.commenplayer.util.FileMediaDataSource;
-import com.d.lib.commenplayer.util.MLog;
 import com.d.lib.commenplayer.util.Settings;
+import com.d.lib.commenplayer.util.ULog;
 
 import java.io.File;
 import java.util.Map;
@@ -25,7 +25,7 @@ import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 public class MediaManager implements MediaController.MediaPlayerControl, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener,
         IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnSeekCompleteListener, IMediaPlayer.OnErrorListener,
         IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnInfoListener {
-    // all possible internal states
+    // All possible internal states
     public static final int STATE_ERROR = -1;
     public static final int STATE_IDLE = 0;
     public static final int STATE_PREPARING = 1;
@@ -46,7 +46,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
     // of STATE_PAUSED.
     public int currentState = STATE_IDLE;
     public int targetState = STATE_IDLE;
-    public int seekWhenPrepared;  // recording the seek position while preparing
+    public int seekWhenPrepared;  // Recording the seek position while preparing
     private int currentBufferPercentage;
     private IPlayerListener listener;
 
@@ -75,11 +75,11 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
         currentState = STATE_PREPARING;
         currentBufferPercentage = 0;
         seekWhenPrepared = 0;
-        // we shouldn't clear the target state, because somebody might have
+        // We shouldn't clear the target state, because somebody might have
         // called start() previously
         release(context, false);
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        //AudioManager.AUDIOFOCUS_GAIN / AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
+        // AudioManager.AUDIOFOCUS_GAIN / AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
         am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         try {
             mediaPlayer = Factory.createPlayer(context, settings.getPlayer());
@@ -109,7 +109,7 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
             mediaPlayer.prepareAsync();
             return mediaPlayer;
         } catch (Exception e) {
-            MLog.w("Unable to open content: " + uri + e);
+            ULog.w("Unable to open content: " + uri + e);
             onError(mediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
             e.printStackTrace();
             return null;
@@ -175,11 +175,11 @@ public class MediaManager implements MediaController.MediaPlayerControl, IMediaP
 
     @Override
     public boolean onError(final IMediaPlayer mp, final int what, final int extra) {
-        MLog.d("Error: " + what + "," + extra);
+        ULog.d("Error: " + what + "," + extra);
         if (what == MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK) {
-            MLog.d("onError:" + "Invalid progressive playback");
+            ULog.d("onError:" + "Invalid progressive playback");
         } else {
-            MLog.d("onError:" + "Unknown");
+            ULog.d("onError:" + "Unknown");
         }
         currentState = STATE_ERROR;
         targetState = STATE_ERROR;

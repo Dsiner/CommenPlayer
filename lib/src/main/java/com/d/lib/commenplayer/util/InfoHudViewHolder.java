@@ -23,7 +23,7 @@ public class InfoHudViewHolder {
     }
 
     private void setRowValue(String id, String value) {
-        MLog.d("id:" + value);
+        ULog.d("id:" + value);
     }
 
     public void setMediaPlayer(IMediaPlayer mp) {

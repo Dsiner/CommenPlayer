@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.d.lib.commenplayer.CommenPlayer;
 import com.d.lib.commenplayer.R;
 import com.d.lib.commenplayer.listener.OnShowThumbnailListener;
-import com.d.lib.commenplayer.util.MUtil;
+import com.d.lib.commenplayer.util.Util;
 
 public class AdapterPlayer extends FrameLayout {
     private FrameLayout flytThumbnail;
@@ -52,7 +52,7 @@ public class AdapterPlayer extends FrameLayout {
                     return;
                 }
                 player.pause();
-                MUtil.peelInject(player, AdapterPlayer.this);
+                Util.peelInject(player, AdapterPlayer.this);
                 flytThumbnail.setVisibility(GONE);
                 player.play(url);
             }

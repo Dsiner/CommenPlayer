@@ -20,10 +20,10 @@ import android.widget.TextView;
 
 import com.d.lib.commenplayer.R;
 import com.d.lib.commenplayer.listener.IMediaPlayerControl;
-import com.d.lib.commenplayer.util.MUtil;
+import com.d.lib.commenplayer.util.Util;
 
 /**
- * 视频浮层-滑动控制
+ * Video Floating Layer - Sliding Control
  * Created by D on 2017/8/8.
  */
 public class TouchLayout extends FrameLayout implements View.OnTouchListener {
@@ -78,7 +78,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         View root = LayoutInflater.from(context).inflate(R.layout.lib_player_layout_touch, this);
         initView(root);
-        int[] size = MUtil.getScreenSize(mActivity);
+        int[] size = Util.getScreenSize(mActivity);
         screenWidth = size[0];
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -113,12 +113,12 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
         newPosition = Math.min(newPosition, duration);
         newPosition = Math.max(newPosition, 0);
         prbProgress.setProgress((int) (newPosition * 1.0 / duration * 100));
-        tvProgress.setText(MUtil.generateTime(newPosition));
+        tvProgress.setText(Util.generateTime(newPosition));
         listener.progressTo(newPosition, 0);
     }
 
     /**
-     * 滑动改变亮度
+     * Slide to change brightness
      */
     private void onBrightnessSlide(float percent) {
         show(TYPE_BRIGHTNESS);
@@ -142,7 +142,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 滑动调节声音大小
+     * Slide to adjust the sound size
      */
     private void onVolumeSlide(float percent) {
         show(TYPE_VOLUME);
@@ -155,14 +155,14 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
         int index = volume + (int) (maxVolume * percent);
         index = Math.min(index, maxVolume);
         index = Math.max(index, 0);
-        //变更声音
+        // Change sound
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, index, 0);
-        //变更进度条
+        // Change progress bar
         prbVolume.setProgress((int) (index * 1.0 / maxVolume * 100));
     }
 
     /**
-     * 手势结束
+     * End of gesture
      */
     private void endGesture() {
         show(GONE);
@@ -180,7 +180,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
         if (gestureDetector.onTouchEvent(event)) {
             return true;
         }
-        //处理手势结束
+        // Handling the end of gesture
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
                 endGesture();
@@ -198,7 +198,7 @@ public class TouchLayout extends FrameLayout implements View.OnTouchListener {
             if (!scrollValid && (Math.abs(deltaX) > touchSlop || Math.abs(deltaY) > touchSlop)) {
                 toSeek = Math.abs(deltaX) >= Math.abs(deltaY);
                 toVolume = oldX > screenWidth * 0.5f;
-                scrollValid = true;//滑动生效
+                scrollValid = true; // Sliding takes effect
                 if (toSeek && listener != null) {
                     position = listener.getCurrentPosition();
                     duration = listener.getDuration();

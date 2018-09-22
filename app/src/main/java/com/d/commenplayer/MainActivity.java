@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.d.commenplayer.net.NetChangeReceiver;
-import com.d.commenplayer.R;
+import com.d.commenplayer.netstate.NetCompat;
 
 public class MainActivity extends Activity {
 
@@ -15,7 +14,7 @@ public class MainActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NetChangeReceiver.resetNetStatus(getApplicationContext());
+        NetCompat.init(getApplicationContext());
         init();
     }
 

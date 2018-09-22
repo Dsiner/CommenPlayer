@@ -32,7 +32,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.d.lib.commenplayer.listener.IRenderView;
-import com.d.lib.commenplayer.util.MLog;
+import com.d.lib.commenplayer.util.ULog;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -105,7 +105,7 @@ public class SurfaceRenderView extends SurfaceView implements IRenderView {
 
     @Override
     public void setVideoRotation(int degree) {
-        MLog.e("SurfaceView doesn't support rotation (" + degree + ")!");
+        ULog.e("SurfaceView doesn't support rotation (" + degree + ")!");
     }
 
     @Override

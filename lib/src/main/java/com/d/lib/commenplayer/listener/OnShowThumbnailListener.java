@@ -3,8 +3,9 @@ package com.d.lib.commenplayer.listener;
 import android.widget.ImageView;
 
 public interface OnShowThumbnailListener {
+
     /**
-     * 回传封面的view，让用户自主设置
+     * Return the cover view, let the user set it autonomously
      */
     void onShowThumbnail(ImageView ivThumbnail);
 }

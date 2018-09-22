@@ -1,11 +1,14 @@
-package com.d.commenplayer.net;
+package com.d.commenplayer.netstate;
 
 /**
- * Constans
- * Created by D on 2017/5/28.
+ * Created by D on 2018/2/5.
  */
-public class NetConstans {
-    public static int NET_STATUS = 0;
+public class NetState {
+
+    /**
+     * Current network status
+     */
+    static int NET_STATUS = 0;
 
     public final static int NO_AVAILABLE = 0;
     public final static int UN_CONNECTED = 1;

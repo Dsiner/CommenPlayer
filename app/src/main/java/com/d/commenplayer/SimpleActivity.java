@@ -7,31 +7,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.d.commenplayer.R;
+import com.d.commenplayer.netstate.NetBus;
+import com.d.commenplayer.netstate.NetCompat;
+import com.d.commenplayer.netstate.NetState;
 import com.d.lib.commenplayer.CommenPlayer;
 import com.d.lib.commenplayer.listener.IPlayerListener;
 import com.d.lib.commenplayer.listener.OnNetListener;
 import com.d.lib.commenplayer.ui.ControlLayout;
-import com.d.lib.commenplayer.util.MLog;
-import com.d.lib.commenplayer.util.MUtil;
-import com.d.commenplayer.net.NetConstans;
-import com.d.commenplayer.net.NetEvent;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.d.lib.commenplayer.util.ULog;
+import com.d.lib.commenplayer.util.Util;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class SimpleActivity extends Activity {
+public class SimpleActivity extends Activity implements NetBus.OnNetListener {
     private CommenPlayer player;
     private boolean ignoreNet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_simple);
+        NetBus.getIns().addListener(this);
         initView();
         initPlayer();
     }
@@ -66,7 +62,7 @@ public class SimpleActivity extends Activity {
 
             @Override
             public void onPrepared(IMediaPlayer mp) {
-                if (!ignoreNet && NetConstans.NET_STATUS == NetConstans.CONNECTED_MOBILE) {
+                if (!ignoreNet && NetCompat.getStatus() == NetState.CONNECTED_MOBILE) {
                     player.pause();
                     player.getControl().setState(ControlLayout.STATE_MOBILE_NET);
                 } else {
@@ -110,6 +106,14 @@ public class SimpleActivity extends Activity {
     }
 
     @Override
+    public void onNetChange(int state) {
+        if (isFinishing()) {
+            return;
+        }
+        ULog.d("dsiner: Network state--> " + state);
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         ViewGroup.LayoutParams lp = player.getLayoutParams();
@@ -118,7 +122,7 @@ public class SimpleActivity extends Activity {
             lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
             player.setLayoutParams(lp);
         } else {
-            lp.height = MUtil.dip2px(getApplicationContext(), 180);
+            lp.height = Util.dip2px(getApplicationContext(), 180);
             player.setLayoutParams(lp);
         }
         if (player != null) {
@@ -134,14 +138,6 @@ public class SimpleActivity extends Activity {
         super.onBackPressed();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNetEvent(NetEvent event) {
-        if (event == null || isFinishing()) {
-            return;
-        }
-        MLog.d("dsiner: Net_" + event.status);
-    }
-
     @Override
     public void finish() {
         if (player != null) {
@@ -152,7 +148,7 @@ public class SimpleActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        NetBus.getIns().removeListener(this);
         super.onDestroy();
     }
 }

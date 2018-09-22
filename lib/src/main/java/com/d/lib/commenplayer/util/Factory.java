@@ -52,7 +52,7 @@ public class Factory {
             case RENDER_SURFACE_VIEW:
                 return new SurfaceRenderView(context);
             default:
-                MLog.e(String.format(Locale.getDefault(), "invalid render %d", render));
+                ULog.e(String.format(Locale.getDefault(), "invalid render %d", render));
                 return null;
         }
     }
@@ -108,7 +108,7 @@ public class Factory {
                 ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
                 ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
 
-                //设置rtsp的连接模式为：tcp/udp
+                // Set the connection mode of rtsp to: tcp/udp
                 ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "rtsp_transport", "tcp");
 
                 ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);

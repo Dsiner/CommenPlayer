@@ -31,8 +31,8 @@ import com.d.lib.commenplayer.listener.IPlayerListener;
 import com.d.lib.commenplayer.listener.IRenderView;
 import com.d.lib.commenplayer.services.MediaPlayerService;
 import com.d.lib.commenplayer.util.Factory;
-import com.d.lib.commenplayer.util.MLog;
 import com.d.lib.commenplayer.util.Settings;
+import com.d.lib.commenplayer.util.ULog;
 
 import java.util.Map;
 
@@ -97,7 +97,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             IjkMediaPlayer.native_profileBegin("libijkplayer.so");
             playerSupport = true;
         } catch (Throwable e) {
-            MLog.e("GiraffePlayer loadLibraries error" + e);
+            ULog.e("GiraffePlayer loadLibraries error" + e);
         }
 
         initBackground();
@@ -195,7 +195,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceChanged(@NonNull IRenderView.ISurfaceHolder holder, int format, int w, int h) {
             if (holder.getRenderView() != renderView) {
-                MLog.e("onSurfaceChanged: unmatched render callback");
+                ULog.e("onSurfaceChanged: unmatched render callback");
                 return;
             }
             surfaceWidth = w;
@@ -213,7 +213,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceCreated(@NonNull IRenderView.ISurfaceHolder holder, int width, int height) {
             if (holder.getRenderView() != renderView) {
-                MLog.e("onSurfaceCreated: unmatched render callback");
+                ULog.e("onSurfaceCreated: unmatched render callback");
                 return;
             }
             if (mediaPlayer != null) {
@@ -226,7 +226,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceDestroyed(@NonNull IRenderView.ISurfaceHolder holder) {
             if (holder.getRenderView() != renderView) {
-                MLog.e("onSurfaceDestroyed: unmatched render callback");
+                ULog.e("onSurfaceDestroyed: unmatched render callback");
                 return;
             }
             // after we return from this we can't use the surface any more
@@ -364,19 +364,19 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     @Override
     public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-        //当what为MEDIA_INFO_VIDEO_RENDERING_START时播放第一帧画面了
+        // 当what为MEDIA_INFO_VIDEO_RENDERING_START时播放第一帧画面了
         if (mActivity == null || mActivity.isFinishing()) {
             return false;
         }
         switch (what) {
             case IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
                 videoRotationDegree = extra;
-                MLog.d("MEDIA_INFO_VIDEO_ROTATION_CHANGED: " + extra);
+                ULog.d("MEDIA_INFO_VIDEO_ROTATION_CHANGED: " + extra);
                 if (renderView != null) {
                     renderView.setVideoRotation(extra);
                 }
                 break;
-            //case IMediaPlayer.MEDIA_INFO_...
+            // case IMediaPlayer.MEDIA_INFO_...
         }
         return listener == null || listener.onInfo(mp, what, extra);
     }

@@ -10,31 +10,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.d.commenplayer.R;
+import com.d.commenplayer.adapter.PlayerAdapter;
+import com.d.commenplayer.model.PlayerModel;
+import com.d.commenplayer.netstate.NetBus;
+import com.d.commenplayer.netstate.NetCompat;
+import com.d.commenplayer.netstate.NetState;
 import com.d.lib.commenplayer.CommenPlayer;
 import com.d.lib.commenplayer.adapter.AdapterPlayer;
 import com.d.lib.commenplayer.listener.IPlayerListener;
 import com.d.lib.commenplayer.listener.OnNetListener;
 import com.d.lib.commenplayer.ui.ControlLayout;
-import com.d.lib.commenplayer.util.MLog;
-import com.d.lib.commenplayer.util.MUtil;
-import com.d.commenplayer.adapter.PlayerAdapter;
-import com.d.commenplayer.model.PlayerModel;
-import com.d.commenplayer.net.NetConstans;
-import com.d.commenplayer.net.NetEvent;
+import com.d.lib.commenplayer.util.ULog;
+import com.d.lib.commenplayer.util.Util;
 import com.d.lib.xrv.LRecyclerView;
 import com.d.lib.xrv.adapter.CommonHolder;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class ListActivity extends Activity {
+public class ListActivity extends Activity implements NetBus.OnNetListener {
 
     private Context context;
     private LRecyclerView list;
@@ -47,8 +43,8 @@ public class ListActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = ListActivity.this;
-        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_list);
+        NetBus.getIns().addListener(this);
         player = new CommenPlayer(context);
         initPlayer();
         list = (LRecyclerView) findViewById(R.id.lrv_list);
@@ -83,7 +79,7 @@ public class ListActivity extends Activity {
 
             @Override
             public void onPrepared(IMediaPlayer mp) {
-                if (!ignoreNet && NetConstans.NET_STATUS == NetConstans.CONNECTED_MOBILE) {
+                if (!ignoreNet && NetCompat.getStatus() == NetState.CONNECTED_MOBILE) {
                     player.pause();
                     player.getControl().setState(ControlLayout.STATE_MOBILE_NET);
                 } else {
@@ -138,15 +134,23 @@ public class ListActivity extends Activity {
     }
 
     @Override
+    public void onNetChange(int state) {
+        if (isFinishing()) {
+            return;
+        }
+        ULog.d("dsiner: Network state--> " + state);
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             container.setVisibility(View.VISIBLE);
             itemContainer = (ViewGroup) player.getParent();
-            MUtil.peelInject(player, container);
+            Util.peelInject(player, container);
         } else {
             container.setVisibility(View.GONE);
-            MUtil.peelInject(player, itemContainer);
+            Util.peelInject(player, itemContainer);
         }
         if (player != null) {
             player.onConfigurationChanged(newConfig);
@@ -161,14 +165,6 @@ public class ListActivity extends Activity {
         super.onBackPressed();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNetEvent(NetEvent event) {
-        if (event == null || isFinishing()) {
-            return;
-        }
-        MLog.d("dsiner: Net_" + event.status);
-    }
-
     @Override
     public void finish() {
         if (player != null) {
@@ -179,7 +175,7 @@ public class ListActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        NetBus.getIns().removeListener(this);
         super.onDestroy();
     }
 }

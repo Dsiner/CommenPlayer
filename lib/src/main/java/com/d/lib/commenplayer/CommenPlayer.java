@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.d.lib.commenplayer.R;
 import com.d.lib.commenplayer.listener.IMediaPlayerControl;
 import com.d.lib.commenplayer.listener.IPlayerListener;
 import com.d.lib.commenplayer.listener.IRenderView;
@@ -23,7 +22,7 @@ import com.d.lib.commenplayer.media.IjkVideoView;
 import com.d.lib.commenplayer.media.TextureRenderView;
 import com.d.lib.commenplayer.ui.ControlLayout;
 import com.d.lib.commenplayer.ui.TouchLayout;
-import com.d.lib.commenplayer.util.MUtil;
+import com.d.lib.commenplayer.util.Util;
 
 import java.lang.ref.WeakReference;
 
@@ -40,13 +39,13 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     private Handler handler = new Handler();
     private ProgressTask progressTask;
     private boolean progressTaskRunning;
-    private boolean progressLock;//进度锁
+    private boolean progressLock; // Progress lock
     private final int TASK_LOOP_TIME = 1000;
 
     private boolean live;
     private String url;
-    private boolean isPortrait = true;//true:竖屏 false:横屏
-    private OnAnimatorUpdateListener animatorUpdateListener;//stick浮层，动画
+    private boolean isPortrait = true; // true: vertical; false: horizontal
+    private OnAnimatorUpdateListener animatorUpdateListener; // Stick floating layer, animation
     private OnNetListener netListener;
 
     private static class ProgressTask implements Runnable {
@@ -253,10 +252,10 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     public void onConfigurationChanged(Configuration newConfig) {
         isPortrait = newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE;
         if (isPortrait) {
-            MUtil.showSystemUIFource(activity, control, touchLayout);
+            Util.showSystemUIFource(activity, control, touchLayout);
         } else {
-            MUtil.hideSystemUI(activity, control, touchLayout);
-            MUtil.showSystemUI(activity, control, touchLayout);
+            Util.hideSystemUI(activity, control, touchLayout);
+            Util.showSystemUI(activity, control, touchLayout);
         }
         touchLayout.setVisibility(isPortrait ? GONE : VISIBLE);
         control.onConfigurationChanged(isPortrait);
@@ -266,9 +265,9 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     @Override
     public void toggleSystemUI(boolean show) {
         if (show) {
-            MUtil.showSystemUI(activity, control, touchLayout);
+            Util.showSystemUI(activity, control, touchLayout);
         } else {
-            MUtil.hideSystemUI(activity, control, touchLayout);
+            Util.hideSystemUI(activity, control, touchLayout);
         }
     }
 
@@ -327,7 +326,7 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
     }
 
     /**
-     * 获取视频截图
+     * Get a screenshot of the video
      */
     public Bitmap getSnapShot() {
         IRenderView renderView = player.getRenderView();
@@ -338,6 +337,6 @@ public class CommenPlayer extends FrameLayout implements IMediaPlayerControl {
                 && renderView instanceof TextureRenderView) {
             return ((TextureRenderView) renderView).getBitmap();
         }
-        return MUtil.getFrame(activity, url, getCurrentPosition());
+        return Util.getFrame(activity, url, getCurrentPosition());
     }
 }

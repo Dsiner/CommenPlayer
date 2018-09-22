@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.d.lib.commenplayer.R;
 import com.d.lib.commenplayer.listener.IMediaPlayerControl;
-import com.d.lib.commenplayer.util.MUtil;
+import com.d.lib.commenplayer.util.Util;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
 
@@ -33,14 +33,14 @@ public class ControlLayout extends RelativeLayout {
     private final int TASK_STICK_TIME = 5000;
 
     /**
-     * top
+     * Top
      */
     private FrameLayout top;
     private ImageView ivBack;
     private TextView tvTitle;
 
     /**
-     * bottom
+     * Bottom
      */
     private RelativeLayout bottom;
     private ImageView playPause;
@@ -50,12 +50,12 @@ public class ControlLayout extends RelativeLayout {
     private ImageView fullscreen;
 
     /**
-     * center-loading
+     * Center-loading
      */
     private ProgressBar loading;
 
     /**
-     * center-tips
+     * Center-tips
      */
     private LinearLayout tips;
     private TextView tipsText;
@@ -70,7 +70,7 @@ public class ControlLayout extends RelativeLayout {
 
     private ValueAnimator animation;
     private ValueAnimator.AnimatorUpdateListener amListener;
-    private float factor;//进度因子:0-1
+    private float factor; // Factor: 0-1
     private int height42;
 
     private boolean isPortrait = true;
@@ -124,7 +124,7 @@ public class ControlLayout extends RelativeLayout {
         setClipToPadding(false);
         setClipChildren(false);
         initAnim();
-        height42 = MUtil.dip2px(context, 42);
+        height42 = Util.dip2px(context, 42);
         stickTask = new StickTask(this);
         playPause.setOnClickListener(onClickListener);
         fullscreen.setOnClickListener(onClickListener);
@@ -135,13 +135,13 @@ public class ControlLayout extends RelativeLayout {
                 if (!fromUser) {
                     return;
                 }
-                current.setText(MUtil.generateTime(MUtil.getPosition(progress, duration)));
+                current.setText(Util.generateTime(Util.getPosition(progress, duration)));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 if (listener != null) {
-                    listener.lockProgress(true);//加锁
+                    listener.lockProgress(true); // Lock
                 }
                 if (!isPortrait) {
                     stopStickTask();
@@ -151,8 +151,8 @@ public class ControlLayout extends RelativeLayout {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (listener != null) {
-                    listener.seekTo(MUtil.getPosition(seekBar.getProgress(), duration));
-                    listener.lockProgress(false);//释放锁
+                    listener.seekTo(Util.getPosition(seekBar.getProgress(), duration));
+                    listener.lockProgress(false); // Release lock
                 }
                 if (!isPortrait) {
                     reStartStickTask();
@@ -162,24 +162,24 @@ public class ControlLayout extends RelativeLayout {
     }
 
     private void initView(View root) {
-        //top
+        // Top
         top = (FrameLayout) root.findViewById(R.id.layout_player_top);
         ivBack = (ImageView) root.findViewById(R.id.iv_player_back);
         tvTitle = (TextView) root.findViewById(R.id.tv_player_title);
 
-        //bottom
+        // Bottom
         bottom = (RelativeLayout) root.findViewById(R.id.layout_player_bottom);
         playPause = (ImageView) root.findViewById(R.id.iv_player_play_pause);
         current = (TextView) root.findViewById(R.id.tv_player_current);
         seekBar = (SeekBar) root.findViewById(R.id.seek_player_progress);
-        seekBar.setMax(MUtil.SEEKBAR_MAX);
+        seekBar.setMax(Util.SEEKBAR_MAX);
         total = (TextView) root.findViewById(R.id.tv_player_total);
         fullscreen = (ImageView) root.findViewById(R.id.iv_player_fullscreen);
 
-        //center-loading
+        // Center-loading
         loading = (ProgressBar) root.findViewById(R.id.prb_player_loading);
 
-        //center-tips
+        // Center-tips
         tips = (LinearLayout) root.findViewById(R.id.layout_player_tips);
         tipsText = (TextView) root.findViewById(R.id.tv_player_tips_text);
         tipsBtn = (TextView) root.findViewById(R.id.tv_player_tips_btn);
@@ -195,7 +195,7 @@ public class ControlLayout extends RelativeLayout {
                 if (isPortrait) {
                     return;
                 }
-                factor = (float) animation.getAnimatedValue();//更新进度因子
+                factor = (float) animation.getAnimatedValue();
                 top.setVisibility(factor == 1 ? GONE : VISIBLE);
                 top.scrollTo(0, (int) (height42 * factor));
                 bottom.scrollTo(0, (int) (-height42 * factor));
@@ -235,12 +235,12 @@ public class ControlLayout extends RelativeLayout {
                 if (listener != null) {
                     listener.toggleSystemUI(false);
                 }
-                animation.setFloatValues(0, 1);//dismiss
+                animation.setFloatValues(0, 1); // Dismiss
             } else {
                 if (listener != null) {
                     listener.toggleSystemUI(true);
                 }
-                animation.setFloatValues(1, 0);//show
+                animation.setFloatValues(1, 0); // Show
                 reStartStickTask();
             }
             animation.addUpdateListener(amListener);
@@ -318,10 +318,10 @@ public class ControlLayout extends RelativeLayout {
     }
 
     /**
-     * 设置底部控制显示状态
+     * Set the bottom control display state
      *
-     * @param visibility0: 控制按钮
-     * @param visibility1: 全屏按钮
+     * @param visibility0 Control button
+     * @param visibility1 Full screen button
      */
     private void setControlVisibility(int visibility0, int visibility1) {
         playPause.setVisibility(visibility0);
@@ -344,10 +344,10 @@ public class ControlLayout extends RelativeLayout {
         position = Math.min(position, duration);
         position = Math.max(position, 0);
         if (duration > 0) {
-            seekBar.setProgress(MUtil.getProgress(position, duration));
-            seekBar.setSecondaryProgress(MUtil.getSecondaryProgress(bufferPercentage));
-            current.setText(MUtil.generateTime(position));
-            total.setText(MUtil.generateTime(duration));
+            seekBar.setProgress(Util.getProgress(position, duration));
+            seekBar.setSecondaryProgress(Util.getSecondaryProgress(bufferPercentage));
+            current.setText(Util.generateTime(position));
+            total.setText(Util.generateTime(duration));
             this.duration = duration;
         }
     }

@@ -4,24 +4,22 @@ import android.text.TextUtils;
 import android.util.Log;
 
 /**
- * Log工具类，可以打印Log日志类名，方法名，行号
+ * Log tool, you can print the log class name, method name, line number
  */
-public class MLog {
+public class ULog {
+
+    private static final String LOG_TAG = "ULog";
+
     /**
-     * Debug
+     * Debug switch
      */
-    public final static boolean DEVELOP_MODE = true;
+    private static boolean DEVELOP_MODE = true;
 
-    private static final String LOG_TAG = "CommenPlayer";
-    private static MLog log;
-
-    public synchronized static MLog getInstance() {
-        if (log == null)
-            log = new MLog();
-        return log;
+    public static void setDebug(boolean debug) {
+        DEVELOP_MODE = debug;
     }
 
-    private MLog() {
+    private ULog() {
     }
 
     public static void v(String message) {

@@ -64,9 +64,6 @@ public final class MeasureHelper {
 
     /**
      * Must be called by View.onMeasure(int, int)
-     *
-     * @param widthMeasureSpec
-     * @param heightMeasureSpec
      */
     public void doMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 //        MLog.i("@@@@onMeasure(" + View.MeasureSpec.toString(widthMeasureSpec) + ", "

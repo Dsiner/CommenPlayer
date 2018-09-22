@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <receiver android:name="com.d.commenplayer.net.NetChangeReceiver">
+        <receiver android:name="com.d.commenplayer.netstate.NetChangeReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

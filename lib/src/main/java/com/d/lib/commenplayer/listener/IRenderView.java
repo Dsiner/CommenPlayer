@@ -27,8 +27,8 @@ import android.view.View;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public interface IRenderView {
-    int AR_ASPECT_FIT_PARENT = 0;//without clip
-    int AR_ASPECT_FILL_PARENT = 1;//may clip
+    int AR_ASPECT_FIT_PARENT = 0; // Without clip
+    int AR_ASPECT_FILL_PARENT = 1; // May clip
     int AR_ASPECT_WRAP_CONTENT = 2;
     int AR_MATCH_PARENT = 3;
     int AR_16_9_FIT_PARENT = 4;
@@ -67,18 +67,19 @@ public interface IRenderView {
     }
 
     interface IRenderCallback {
+
         /**
-         * @param holder
-         * @param width  could be 0
-         * @param height could be 0
+         * @param holder Holder
+         * @param width  Could be 0
+         * @param height Could be 0
          */
         void onSurfaceCreated(@NonNull ISurfaceHolder holder, int width, int height);
 
         /**
-         * @param holder
-         * @param format could be 0
-         * @param width
-         * @param height
+         * @param holder Holder
+         * @param format Could be 0
+         * @param width  Width
+         * @param height Height
          */
         void onSurfaceChanged(@NonNull ISurfaceHolder holder, int format, int width, int height);
 

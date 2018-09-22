@@ -8,27 +8,28 @@ import android.widget.MediaController;
  * Created by D on 2017/5/27.
  */
 public interface IMediaPlayerControl extends MediaController.MediaPlayerControl {
+
     /**
-     * live mode
+     * Live mode
      */
     void setLive(boolean live);
 
     boolean isLive();
 
     /**
-     * control
+     * Control
      */
     void play(String url);
 
     String getUrl();
 
     /**
-     * 忽略移动网络时流量提醒
+     * Ignore traffic alerts when mobile networks
      */
     void ignoreMobileNet();
 
     /**
-     * display setting
+     * Display setting
      */
     void setPlayerVisibility(int visibility);
 
@@ -51,7 +52,7 @@ public interface IMediaPlayerControl extends MediaController.MediaPlayerControl 
     void toggleOrientation();
 
     /**
-     * liftcycle
+     * Life cycle
      */
     void onResume();
 

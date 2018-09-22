@@ -21,21 +21,31 @@ import com.d.lib.commenplayer.adapter.AdapterPlayer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class MUtil {
+public class Util {
+    public final static int SEEKBAR_MAX = 1000;
+
+    private static int SCREEN_WIDTH; // 屏幕宽度
+    private static int SCREEN_HEIGHT; // 屏幕宽度
+
     private static int STATUS_BAR_HEIGHT = -1;
     private static int NAVIGATION_BAR_HEIGHT = -1;
-    public final static int SEEKBAR_MAX = 1000;
 
     /**
      * 获取屏幕宽度和高度
+     *
+     * @return int[]{SCREEN_WIDTH, SCREEN_HEIGHT}
      */
     public static int[] getScreenSize(Activity activity) {
-        int[] size = new int[2];
+        if (SCREEN_WIDTH > 0 && SCREEN_HEIGHT > 0) {
+            return new int[]{SCREEN_WIDTH, SCREEN_HEIGHT};
+        }
         DisplayMetrics metric = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
-        size[0] = metric.widthPixels;
-        size[1] = metric.heightPixels;
-        return size;
+        if (metric.widthPixels != SCREEN_WIDTH) {
+            SCREEN_WIDTH = metric.widthPixels;
+            SCREEN_HEIGHT = metric.heightPixels;
+        }
+        return new int[]{SCREEN_WIDTH, SCREEN_HEIGHT};
     }
 
     /**
@@ -51,17 +61,18 @@ public class MUtil {
         int seconds = totalSeconds % 60;
         int minutes = (totalSeconds / 60) % 60;
         int hours = totalSeconds / 3600;
-        return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds) : String.format("%02d:%02d", minutes, seconds);
+        return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                : String.format("%02d:%02d", minutes, seconds);
     }
 
     /**
      * 获取SeekBar进度
      *
-     * @param position:当前播放时间
-     * @param duration:播放总时间
+     * @param position 当前播放时间
+     * @param duration 播放总时间
      */
     public static int getProgress(int position, int duration) {
-        int progress = (int) (1.0f * MUtil.SEEKBAR_MAX * position / duration);
+        int progress = (int) (1.0f * Util.SEEKBAR_MAX * position / duration);
         progress = Math.min(progress, duration);
         progress = Math.max(progress, 0);
         return progress;
@@ -70,11 +81,11 @@ public class MUtil {
     /**
      * 获取SeekBar缓冲进度
      *
-     * @param bufferPercentage:缓冲进度bufferPercentage,0-100
+     * @param bufferPercentage 缓冲进度bufferPercentage, 0-100
      */
     public static int getSecondaryProgress(int bufferPercentage) {
-        int secondaryProgress = (int) (1.0f * bufferPercentage / 100 * MUtil.SEEKBAR_MAX);
-        secondaryProgress = Math.min(secondaryProgress, MUtil.SEEKBAR_MAX);
+        int secondaryProgress = (int) (1.0f * bufferPercentage / 100 * Util.SEEKBAR_MAX);
+        secondaryProgress = Math.min(secondaryProgress, Util.SEEKBAR_MAX);
         secondaryProgress = Math.max(secondaryProgress, 0);
         return secondaryProgress;
     }
@@ -82,11 +93,11 @@ public class MUtil {
     /**
      * 获取当前播放位置
      *
-     * @param progress:seekbar当前进度
-     * @param duration:播放总时间
+     * @param progress SeekBar当前进度
+     * @param duration 播放总时间
      */
     public static int getPosition(int progress, int duration) {
-        int position = (int) (1.0f * progress / MUtil.SEEKBAR_MAX * duration);
+        int position = (int) (1.0f * progress / Util.SEEKBAR_MAX * duration);
         position = Math.min(position, duration);
         position = Math.max(position, 0);
         return position;
@@ -119,7 +130,7 @@ public class MUtil {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
         int orientation;
-        // if the device's natural orientation is portrait:
+        // If the device's natural orientation is portrait:
         if ((rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180)
                 && height > width
                 || (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270)
@@ -184,13 +195,14 @@ public class MUtil {
         Bitmap bitmap = null;
         try {
             retriever.setDataSource(url);
-            //取得视频的长度(单位为毫秒)
-//            String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            bitmap = retriever.getFrameAtTime(pos, MediaMetadataRetriever.OPTION_CLOSEST);//获取时间点的缩略图
+            // 取得视频的长度(单位为毫秒)
+            // String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            // 获取时间点的缩略图
+            bitmap = retriever.getFrameAtTime(pos, MediaMetadataRetriever.OPTION_CLOSEST);
             retriever.release();
         } catch (Exception e) {
             retriever.release();
-            MLog.d("fail to get frame" + e.getMessage());
+            ULog.d("Fail to get frame" + e.getMessage());
         }
         return bitmap;
     }
@@ -201,8 +213,8 @@ public class MUtil {
     private static void drawBitmap(Bitmap bitmap, Bitmap bp, float left, float top) {
         Canvas cv = new Canvas(bitmap);
         cv.drawBitmap(bp, left, top, null);
-        cv.save(Canvas.ALL_SAVE_FLAG);//保存
-        cv.restore();//存储
+        cv.save(Canvas.ALL_SAVE_FLAG); // 保存
+        cv.restore(); // 存储
     }
 
     /**
@@ -238,7 +250,7 @@ public class MUtil {
         Class<?> c = null;
         Object obj = null;
         Field field = null;
-        int x = 0, sbar = 38;// 默认为38，貌似大部分是这样的
+        int x = 0, sbar = 38; // 默认为38，貌似大部分是这样的
         try {
             c = Class.forName("com.android.internal.R$dimen");
             obj = c.newInstance();
@@ -311,7 +323,7 @@ public class MUtil {
      */
     public static void hideSystemUI(Activity activity, View... views) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            //4.1 above API level 16
+            // 4.1 above API level 16
             int uist = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LOW_PROFILE
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -323,7 +335,7 @@ public class MUtil {
             }
             View decorView = activity.getWindow().getDecorView();
             decorView.setSystemUiVisibility(uist);
-            //some views can setFitsSystemWindows(true)、setPadding()
+            // Some views can setFitsSystemWindows(true), setPadding()
             setFitsPadding(0, getStatusBarHeight(activity), getNavigationBarHeight(activity), 0, views);
         } else {
             WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
@@ -338,12 +350,12 @@ public class MUtil {
      */
     public static void showSystemUI(Activity activity, View... views) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            //4.1 above API level 16
+            // 4.1 above API level 16
             View decorView = activity.getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            //some views can setFitsSystemWindows(true)、setPadding()、虚拟导航栏高度、ui处理
+            // Some views can setFitsSystemWindows(true), setPadding(), 虚拟导航栏高度, ui处理
             setFitsPadding(0, getStatusBarHeight(activity), getNavigationBarHeight(activity), 0, views);
         } else {
             WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
@@ -359,11 +371,11 @@ public class MUtil {
      */
     public static void showSystemUIFource(Activity activity, View... views) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            //4.1 above API level 16
+            // 4.1 above API level 16
             View decorView = activity.getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            //some views can setFitsSystemWindows(false)、setPadding()
+            // Some views can setFitsSystemWindows(false), setPadding()
             setFitsPadding(0, 0, 0, 0, views);
         } else {
             WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();

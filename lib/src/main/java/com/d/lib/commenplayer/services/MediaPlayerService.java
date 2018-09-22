@@ -26,7 +26,7 @@ import android.support.annotation.Nullable;
 import com.d.lib.commenplayer.media.MediaManager;
 
 public class MediaPlayerService extends Service {
-    private static MediaManager mManager;
+    private volatile static MediaManager mManager;
 
     public static void intentToStart(Context context) {
         context.startService(newIntent(context));

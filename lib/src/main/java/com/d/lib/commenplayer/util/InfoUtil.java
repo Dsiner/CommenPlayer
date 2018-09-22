@@ -11,7 +11,7 @@ import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.player.misc.IjkMediaFormat;
 
 /**
- * Util
+ * InfoUtil
  * Created by D on 2017/5/27.
  */
 public class InfoUtil {
@@ -33,9 +33,9 @@ public class InfoUtil {
         int selectedSubtitleTrack = MediaPlayerCompat.getSelectedTrack(mMediaPlayer, ITrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT);
 
         //media_information
-        MLog.d("Player" + MediaPlayerCompat.getName(mMediaPlayer));
-        MLog.d("Resolution" + buildResolution(mVideoWidth, mVideoHeight, mVideoSarNum, mVideoSarDen));
-        MLog.d("Length" + buildTimeMilli(mMediaPlayer.getDuration()));
+        ULog.d("Player" + MediaPlayerCompat.getName(mMediaPlayer));
+        ULog.d("Resolution" + buildResolution(mVideoWidth, mVideoHeight, mVideoSarNum, mVideoSarDen));
+        ULog.d("Length" + buildTimeMilli(mMediaPlayer.getDuration()));
 
         ITrackInfo trackInfos[] = mMediaPlayer.getTrackInfo();
         if (trackInfos != null) {
@@ -45,36 +45,36 @@ public class InfoUtil {
 
                 int trackType = trackInfo.getTrackType();
                 if (index == selectedVideoTrack) {
-                    MLog.d("Stream #" + index + " mi__selected_video_track");
+                    ULog.d("Stream #" + index + " mi__selected_video_track");
                 } else if (index == selectedAudioTrack) {
-                    MLog.d("Stream #" + index + " mi__selected_audio_track");
+                    ULog.d("Stream #" + index + " mi__selected_audio_track");
                 } else if (index == selectedSubtitleTrack) {
-                    MLog.d("Stream #" + index + " mi__selected_subtitle_track");
+                    ULog.d("Stream #" + index + " mi__selected_subtitle_track");
                 } else {
-                    MLog.d("Stream #" + index);
+                    ULog.d("Stream #" + index);
                 }
-                MLog.d("Type" + buildTrackType(context, trackType));
+                ULog.d("Type" + buildTrackType(context, trackType));
                 String language = TextUtils.isEmpty(trackInfo.getLanguage()) ? "und" : trackInfo.getLanguage();
-                MLog.d("Language:" + language);
+                ULog.d("Language:" + language);
 
                 IMediaFormat mediaFormat = trackInfo.getFormat();
                 if (mediaFormat == null) {
                 } else if (mediaFormat instanceof IjkMediaFormat) {
                     switch (trackType) {
                         case ITrackInfo.MEDIA_TRACK_TYPE_VIDEO:
-                            MLog.d("Codec:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_LONG_NAME_UI));
-                            MLog.d("Profile level:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PROFILE_LEVEL_UI));
-                            MLog.d("Pixel format:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PIXEL_FORMAT_UI));
-                            MLog.d("Resolution:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_RESOLUTION_UI));
-                            MLog.d("Frame rate:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_FRAME_RATE_UI));
-                            MLog.d("Bit rate:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_BIT_RATE_UI));
+                            ULog.d("Codec:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_LONG_NAME_UI));
+                            ULog.d("Profile level:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PROFILE_LEVEL_UI));
+                            ULog.d("Pixel format:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PIXEL_FORMAT_UI));
+                            ULog.d("Resolution:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_RESOLUTION_UI));
+                            ULog.d("Frame rate:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_FRAME_RATE_UI));
+                            ULog.d("Bit rate:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_BIT_RATE_UI));
                             break;
                         case ITrackInfo.MEDIA_TRACK_TYPE_AUDIO:
-                            MLog.d("Codec:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_LONG_NAME_UI));
-                            MLog.d("Profile level:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PROFILE_LEVEL_UI));
-                            MLog.d("Sample rate:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_SAMPLE_RATE_UI));
-                            MLog.d("Channels:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CHANNEL_UI));
-                            MLog.d("Bit rate:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_BIT_RATE_UI));
+                            ULog.d("Codec:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_LONG_NAME_UI));
+                            ULog.d("Profile level:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PROFILE_LEVEL_UI));
+                            ULog.d("Sample rate:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_SAMPLE_RATE_UI));
+                            ULog.d("Channels:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_CHANNEL_UI));
+                            ULog.d("Bit rate:" + mediaFormat.getString(IjkMediaFormat.KEY_IJK_BIT_RATE_UI));
                             break;
                         default:
                             break;

@@ -3,7 +3,7 @@ package com.d.lib.commenplayer.util;
 import android.content.Context;
 
 /**
- * 预设配置
+ * Preset configuration
  */
 public class Settings {
     public static final int PV_PLAYER__Auto = 0;

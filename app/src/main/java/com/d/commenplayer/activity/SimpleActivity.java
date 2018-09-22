@@ -1,4 +1,4 @@
-package com.d.commenplayer;
+package com.d.commenplayer.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.d.commenplayer.R;
 import com.d.commenplayer.netstate.NetBus;
 import com.d.commenplayer.netstate.NetCompat;
 import com.d.commenplayer.netstate.NetState;

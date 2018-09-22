@@ -268,43 +268,49 @@ public class ControlLayout extends RelativeLayout {
             case STATE_MOBILE_NET:
                 setPlayerVisibility(GONE, VISIBLE, GONE);
                 setControlVisibility(INVISIBLE, INVISIBLE);
-                setControl("当前为移动网络，是否继续播放？", "继续播放", new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setPlayerVisibility(GONE, GONE, VISIBLE);
-                        setControlVisibility(listener == null || listener.isLive() ? INVISIBLE : VISIBLE, VISIBLE);
-                        if (listener != null) {
-                            listener.ignoreMobileNet();
-                            listener.start();
-                        }
-                    }
-                });
+                setControl(getResources().getString(R.string.lib_player_mobile_network_continue),
+                        getResources().getString(R.string.lib_player_continue_playing),
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setPlayerVisibility(GONE, GONE, VISIBLE);
+                                setControlVisibility(listener == null || listener.isLive() ? INVISIBLE : VISIBLE, VISIBLE);
+                                if (listener != null) {
+                                    listener.ignoreMobileNet();
+                                    listener.start();
+                                }
+                            }
+                        });
                 break;
             case STATE_COMPLETION:
                 setPlayerVisibility(GONE, VISIBLE, GONE);
                 setControlVisibility(INVISIBLE, INVISIBLE);
-                setControl("播放结束，是否重新播放？", "重新播放", new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setPlayerVisibility(VISIBLE, GONE, GONE);
-                        if (listener != null) {
-                            listener.play(listener.getUrl());
-                        }
-                    }
-                });
+                setControl(getResources().getString(R.string.lib_player_play_end_replay),
+                        getResources().getString(R.string.lib_player_replay),
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setPlayerVisibility(VISIBLE, GONE, GONE);
+                                if (listener != null) {
+                                    listener.play(listener.getUrl());
+                                }
+                            }
+                        });
                 break;
             case STATE_ERROR:
                 setPlayerVisibility(GONE, VISIBLE, GONE);
                 setControlVisibility(INVISIBLE, INVISIBLE);
-                setControl("播放失败，是否重试？", "重试", new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setPlayerVisibility(VISIBLE, GONE, GONE);
-                        if (listener != null) {
-                            listener.play(listener.getUrl());
-                        }
-                    }
-                });
+                setControl(getResources().getString(R.string.lib_player_play_failed_retry),
+                        getResources().getString(R.string.lib_player_retry),
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setPlayerVisibility(VISIBLE, GONE, GONE);
+                                if (listener != null) {
+                                    listener.play(listener.getUrl());
+                                }
+                            }
+                        });
                 break;
         }
     }

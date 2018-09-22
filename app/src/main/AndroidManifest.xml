@@ -3,6 +3,7 @@
     package="com.d.commenplayer">
 
     <application
+        android:name="com.d.commenplayer.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,12 +28,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.d.commenplayer.SimpleActivity"
+            android:name="com.d.commenplayer.activity.SimpleActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name="com.d.commenplayer.ListActivity"
+            android:name="com.d.commenplayer.activity.ListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />

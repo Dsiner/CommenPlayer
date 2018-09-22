@@ -1,7 +1,6 @@
-package com.d.commenplayer;
+package com.d.commenplayer.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,8 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.d.commenplayer.R;
 import com.d.commenplayer.adapter.PlayerAdapter;
-import com.d.commenplayer.model.PlayerModel;
+import com.d.commenplayer.model.MediaModel;
 import com.d.commenplayer.netstate.NetBus;
 import com.d.commenplayer.netstate.NetCompat;
 import com.d.commenplayer.netstate.NetState;
@@ -32,8 +32,6 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public class ListActivity extends Activity implements NetBus.OnNetListener {
 
-    private Context context;
-    private LRecyclerView list;
     private ViewGroup itemContainer;
     private FrameLayout container;
     private CommenPlayer player;
@@ -42,13 +40,15 @@ public class ListActivity extends Activity implements NetBus.OnNetListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = ListActivity.this;
         setContentView(R.layout.activity_list);
         NetBus.getIns().addListener(this);
-        player = new CommenPlayer(context);
         initPlayer();
-        list = (LRecyclerView) findViewById(R.id.lrv_list);
+        initView();
+    }
+
+    private void initView() {
         container = (FrameLayout) findViewById(R.id.player_container);
+        LRecyclerView list = (LRecyclerView) findViewById(R.id.lrv_list);
         list.setAdapter(new PlayerAdapter(this, getDatas(), R.layout.adapter_player, player));
         list.setRecyclerListener(new RecyclerView.RecyclerListener() {
             @Override
@@ -60,6 +60,7 @@ public class ListActivity extends Activity implements NetBus.OnNetListener {
     }
 
     private void initPlayer() {
+        player = new CommenPlayer(this);
         player.setLive(false);
         player.setOnNetListener(new OnNetListener() {
             @Override
@@ -105,12 +106,12 @@ public class ListActivity extends Activity implements NetBus.OnNetListener {
         });
     }
 
-    private List<PlayerModel> getDatas() {
+    private List<MediaModel> getDatas() {
         int[] urls = new int[]{R.string.url1, R.string.url2, R.string.url3, R.string.url4,
                 R.string.url5, R.string.url6, R.string.url7, R.string.url8,};
-        ArrayList<PlayerModel> datas = new ArrayList<>();
+        ArrayList<MediaModel> datas = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            PlayerModel model = new PlayerModel();
+            MediaModel model = new MediaModel();
             model.url = getResources().getString(urls[i % urls.length]);
             datas.add(model);
         }

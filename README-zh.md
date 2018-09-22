@@ -87,7 +87,7 @@
     Override onResume()、onPause()、onConfigurationChanged()、onBackPressed()、onDestroy()
 ```
 
-More usage see [Demo](app/src/main/java/com/d/iplayer/MainActivity.java)
+More usage see [Demo](app/src/main/java/com/d/commenplayer/MainActivity.java)
 
 ## Thanks
 - [ijkplayer](https://github.com/Bilibili/ijkplayer)  - Video player based on ffplay

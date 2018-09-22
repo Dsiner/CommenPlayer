@@ -1,4 +1,4 @@
-package com.d.iplayer.adapter;
+package com.d.commenplayer.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,8 +7,8 @@ import android.widget.ImageView;
 import com.d.lib.commenplayer.CommenPlayer;
 import com.d.lib.commenplayer.adapter.AdapterPlayer;
 import com.d.lib.commenplayer.listener.OnShowThumbnailListener;
-import com.d.iplayer.R;
-import com.d.iplayer.model.PlayerModel;
+import com.d.commenplayer.R;
+import com.d.commenplayer.model.PlayerModel;
 import com.d.lib.xrv.adapter.CommonAdapter;
 import com.d.lib.xrv.adapter.CommonHolder;
 

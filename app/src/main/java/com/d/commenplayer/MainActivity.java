@@ -1,4 +1,4 @@
-package com.d.iplayer;
+package com.d.commenplayer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.d.iplayer.net.NetChangeReceiver;
+import com.d.commenplayer.net.NetChangeReceiver;
+import com.d.commenplayer.R;
 
 public class MainActivity extends Activity {
 

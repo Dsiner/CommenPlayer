@@ -1,4 +1,4 @@
-package com.d.iplayer.net;
+package com.d.commenplayer.net;
 
 /**
  * 网络状态

@@ -90,7 +90,7 @@
     Override onResume()、onPause()、onConfigurationChanged()、onBackPressed()、onDestroy()
 ```
 
-More usage see [Demo](app/src/main/java/com/d/iplayer/MainActivity.java)
+More usage see [Demo](app/src/main/java/com/d/commenplayer/MainActivity.java)
 
 ## Contributors
 - [Anhar Ismail](https://github.com/anharismail)  - Logo design contribution

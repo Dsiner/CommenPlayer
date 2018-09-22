@@ -1,5 +1,4 @@
-package com.d.iplayer.model;
-
+package com.d.commenplayer.model;
 
 public class PlayerModel {
     public String url = "http://vpls.cdn.videojj.com/scene/video02_720p.mp4";

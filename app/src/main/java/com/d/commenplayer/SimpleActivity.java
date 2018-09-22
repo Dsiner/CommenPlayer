@@ -1,4 +1,4 @@
-package com.d.iplayer;
+package com.d.commenplayer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,14 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.d.commenplayer.R;
 import com.d.lib.commenplayer.CommenPlayer;
 import com.d.lib.commenplayer.listener.IPlayerListener;
 import com.d.lib.commenplayer.listener.OnNetListener;
 import com.d.lib.commenplayer.ui.ControlLayout;
 import com.d.lib.commenplayer.util.MLog;
 import com.d.lib.commenplayer.util.MUtil;
-import com.d.iplayer.net.NetConstans;
-import com.d.iplayer.net.NetEvent;
+import com.d.commenplayer.net.NetConstans;
+import com.d.commenplayer.net.NetEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

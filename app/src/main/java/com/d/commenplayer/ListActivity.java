@@ -1,4 +1,4 @@
-package com.d.iplayer;
+package com.d.commenplayer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.d.commenplayer.R;
 import com.d.lib.commenplayer.CommenPlayer;
 import com.d.lib.commenplayer.adapter.AdapterPlayer;
 import com.d.lib.commenplayer.listener.IPlayerListener;
@@ -17,10 +18,10 @@ import com.d.lib.commenplayer.listener.OnNetListener;
 import com.d.lib.commenplayer.ui.ControlLayout;
 import com.d.lib.commenplayer.util.MLog;
 import com.d.lib.commenplayer.util.MUtil;
-import com.d.iplayer.adapter.PlayerAdapter;
-import com.d.iplayer.model.PlayerModel;
-import com.d.iplayer.net.NetConstans;
-import com.d.iplayer.net.NetEvent;
+import com.d.commenplayer.adapter.PlayerAdapter;
+import com.d.commenplayer.model.PlayerModel;
+import com.d.commenplayer.net.NetConstans;
+import com.d.commenplayer.net.NetEvent;
 import com.d.lib.xrv.LRecyclerView;
 import com.d.lib.xrv.adapter.CommonHolder;
 

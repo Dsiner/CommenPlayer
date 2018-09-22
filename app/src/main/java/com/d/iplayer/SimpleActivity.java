@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.d.commenplayer.CommenPlayer;
-import com.d.commenplayer.listener.IPlayerListener;
-import com.d.commenplayer.listener.OnNetListener;
-import com.d.commenplayer.ui.ControlLayout;
-import com.d.commenplayer.util.MLog;
-import com.d.commenplayer.util.MUtil;
+import com.d.lib.commenplayer.CommenPlayer;
+import com.d.lib.commenplayer.listener.IPlayerListener;
+import com.d.lib.commenplayer.listener.OnNetListener;
+import com.d.lib.commenplayer.ui.ControlLayout;
+import com.d.lib.commenplayer.util.MLog;
+import com.d.lib.commenplayer.util.MUtil;
 import com.d.iplayer.net.NetConstans;
 import com.d.iplayer.net.NetEvent;
 

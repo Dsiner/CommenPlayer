@@ -1,1 +1,1 @@
-include ':app', ':commenplayer'
+include ':app', ':lib'

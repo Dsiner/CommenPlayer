@@ -28,7 +28,7 @@
 
 ## Usage
 ```xml
-    <com.d.commenplayer.CommenPlayer
+    <com.d.lib.commenplayer.CommenPlayer
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="180dp" />

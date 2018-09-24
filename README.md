@@ -92,6 +92,9 @@
 
 More usage see [Demo](app/src/main/java/com/d/commenplayer/MainActivity.java)
 
+## Latest Changes
+- [Changelog.md](CHANGELOG.md)
+
 ## Contributors
 - [Anhar Ismail](https://github.com/anharismail)  - Logo design contribution
 

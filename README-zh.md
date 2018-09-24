@@ -89,6 +89,9 @@
 
 More usage see [Demo](app/src/main/java/com/d/commenplayer/MainActivity.java)
 
+## Latest Changes
+- [Changelog.md](CHANGELOG.md)
+
 ## Thanks
 - [ijkplayer](https://github.com/Bilibili/ijkplayer)  - Video player based on ffplay
 - [vlc-android-sdk](https://github.com/mrmaffen/vlc-android-sdk)  - Unofficial VLC Android SDK pushed to JCenter. Supported ABIs are armeabi-v7a, arm64-v8a, x86 and x86_64.

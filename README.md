@@ -6,13 +6,15 @@
 
 <a href="https://github.com/Dsiner/CommenPlayer" target="_blank"><p align="center"><img src="https://github.com/Dsiner/CommenPlayer/blob/master/logo/horizontal-color.png" alt="CommenPlayer" height="150px"></p></a>
 
-> Video player for the Android platform based on ijkplayer, Android MediaPlayer, ExoPlayer / vlc
+> Video player for the Android platform based on ijkplayer, Android MediaPlayer, ExoPlayer / Vlc
 
 ## Branch
-- [master](https://github.com/Dsiner/CommenPlayer)  - develop branch，dependencies，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
-- [ijk-lite](https://github.com/Dsiner/CommenPlayer/tree/ijk-lite-v0.8.8)  - release branch，.so file，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
-- [ijk-default](https://github.com/Dsiner/CommenPlayer/tree/ijk-default-v0.8.8)  - release branch，.so file，more codec/format，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
-- [vlc](https://github.com/Dsiner/CommenPlayer/tree/vlc)  - beta branch，base on `vlc`
+- [master](https://github.com/Dsiner/CommenPlayer)  - `Develop` branch，dependencies，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
+- [ijkplayer-lite-0.7.6 with .so file](https://github.com/Dsiner/CommenPlayer-ijkplayer/tree/ijk-lite-v0.7.6)  - `Release` branch，with .so file，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
+- [ijkplayer-lite-0.8.8 with .so file](https://github.com/Dsiner/CommenPlayer-ijkplayer/tree/ijk-lite-v0.8.8)  - `Release` branch，with .so file，less codec/format for smaller binary size，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
+- [ijkplayer-default-0.7.6 with .so file](https://github.com/Dsiner/CommenPlayer-ijkplayer/tree/ijk-default-v0.7.6)  - `Release` branch，with .so file，more codec/format，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
+- [ijkplayer-default-0.8.8 with .so file](https://github.com/Dsiner/CommenPlayer-ijkplayer/tree/ijk-default-v0.8.8)  - Release branch，with .so file，more codec/format，base on `ijkplayer` ，support ijkplayer、Android MediaPlayer、ExoPlayer
+- [Vlc](https://github.com/Dsiner/CommenPlayer-Vlc)  - `Beta` branch，base on `Vlc`
 
 ## Demo
 <p>

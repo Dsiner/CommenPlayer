@@ -2,7 +2,7 @@ package com.d.commenplayer;
 
 import android.app.Application;
 
-import com.d.commenplayer.netstate.NetCompat;
+import com.d.lib.common.component.netstate.NetCompat;
 
 /**
  * App

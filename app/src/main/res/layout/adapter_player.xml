@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.d.lib.commenplayer.adapter.AdapterPlayer
+    <com.d.commenplayer.adapter.PlayerItem
         android:id="@+id/aplayer"
         android:layout_width="match_parent"
         android:layout_height="165dp"

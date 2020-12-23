@@ -1,56 +1,92 @@
 package com.d.commenplayer.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.d.commenplayer.R;
-import com.d.commenplayer.netstate.NetBus;
-import com.d.commenplayer.netstate.NetCompat;
-import com.d.commenplayer.netstate.NetState;
 import com.d.lib.commenplayer.CommenPlayer;
 import com.d.lib.commenplayer.listener.IPlayerListener;
-import com.d.lib.commenplayer.listener.OnNetListener;
-import com.d.lib.commenplayer.ui.ControlLayout;
+import com.d.lib.commenplayer.listener.OnNetworkListener;
 import com.d.lib.commenplayer.util.ULog;
 import com.d.lib.commenplayer.util.Util;
+import com.d.lib.commenplayer.widget.ControlLayout;
+import com.d.lib.common.component.mvp.MvpBasePresenter;
+import com.d.lib.common.component.mvp.MvpView;
+import com.d.lib.common.component.mvp.app.BaseActivity;
+import com.d.lib.common.component.netstate.NetBus;
+import com.d.lib.common.component.netstate.NetCompat;
+import com.d.lib.common.component.netstate.NetState;
+import com.d.lib.common.component.statusbarcompat.StatusBarCompat;
+import com.d.lib.common.util.ViewHelper;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class SimpleActivity extends Activity implements NetBus.OnNetListener {
+public class SimpleActivity extends BaseActivity<MvpBasePresenter<MvpView>>
+        implements View.OnClickListener {
     private CommenPlayer player;
-    private boolean ignoreNet;
+    private boolean mIgnoreMobileData;
+    private NetBus.OnNetListener mOnNetworkListener;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_simple);
-        NetBus.getIns().addListener(this);
-        initView();
-        initPlayer();
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_view_history:
+                startActivity(new Intent(SimpleActivity.this, ListActivity.class));
+                break;
+        }
     }
 
-    private void initView() {
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.activity_simple;
+    }
+
+    @Override
+    public MvpBasePresenter<MvpView> getPresenter() {
+        return null;
+    }
+
+    @Override
+    protected MvpView getMvpView() {
+        return null;
+    }
+
+    @Override
+    protected void bindView() {
         player = (CommenPlayer) findViewById(R.id.player);
-        findViewById(R.id.btn_view_history).setOnClickListener(new View.OnClickListener() {
+
+        ViewHelper.setOnClickListener(this, this, R.id.btn_view_history);
+    }
+
+    @Override
+    protected void init() {
+        StatusBarCompat.setStatusBarColor(this,
+                ContextCompat.getColor(this, R.color.colorBlack));
+        initPlayer();
+        mOnNetworkListener = new NetBus.OnNetListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SimpleActivity.this, ListActivity.class));
+            public void onNetChange(int state) {
+                if (isFinishing()) {
+                    return;
+                }
+                ULog.d("dsiner: Network state--> " + state);
             }
-        });
+        };
+        NetBus.getIns().addListener(mOnNetworkListener);
     }
 
     private void initPlayer() {
         player.setLive(false);
-        player.setOnNetListener(new OnNetListener() {
+        player.setOnNetListener(new OnNetworkListener() {
             @Override
-            public void onIgnoreMobileNet() {
-                ignoreNet = true;
+            public void onIgnoreMobileData() {
+                mIgnoreMobileData = true;
             }
-        }).setOnPlayerListener(new IPlayerListener() {
+        });
+        player.setOnPlayerListener(new IPlayerListener() {
             @Override
             public void onLoading() {
                 player.getControl().setState(ControlLayout.STATE_LOADING);
@@ -63,7 +99,7 @@ public class SimpleActivity extends Activity implements NetBus.OnNetListener {
 
             @Override
             public void onPrepared(IMediaPlayer mp) {
-                if (!ignoreNet && NetCompat.getStatus() == NetState.CONNECTED_MOBILE) {
+                if (!mIgnoreMobileData && NetCompat.getStatus() == NetState.CONNECTED_MOBILE) {
                     player.pause();
                     player.getControl().setState(ControlLayout.STATE_MOBILE_NET);
                 } else {
@@ -107,25 +143,14 @@ public class SimpleActivity extends Activity implements NetBus.OnNetListener {
     }
 
     @Override
-    public void onNetChange(int state) {
-        if (isFinishing()) {
-            return;
-        }
-        ULog.d("dsiner: Network state--> " + state);
-    }
-
-    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        ViewGroup.LayoutParams lp = player.getLayoutParams();
+        final ViewGroup.LayoutParams lp = player.getLayoutParams();
         lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            player.setLayoutParams(lp);
-        } else {
-            lp.height = Util.dip2px(getApplicationContext(), 180);
-            player.setLayoutParams(lp);
-        }
+        lp.height = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+                ? ViewGroup.LayoutParams.MATCH_PARENT
+                : Util.dp2px(getApplicationContext(), 210);
+        player.setLayoutParams(lp);
         if (player != null) {
             player.onConfigurationChanged(newConfig);
         }
@@ -149,7 +174,7 @@ public class SimpleActivity extends Activity implements NetBus.OnNetListener {
 
     @Override
     protected void onDestroy() {
-        NetBus.getIns().removeListener(this);
+        NetBus.getIns().removeListener(mOnNetworkListener);
         super.onDestroy();
     }
 }

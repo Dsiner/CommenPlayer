@@ -1,23 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:background="@color/lib_pub_color_bg_main"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_simple"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:gravity="center"
-        android:text="Simple" />
+    <com.d.lib.common.view.TitleLayout
+        android:id="@+id/tl_title"
+        style="@style/lib_pub_title_style"
+        app:lib_pub_tl_middleText="@string/app_name" />
 
-    <Button
-        android:id="@+id/btn_list"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginTop="12dp"
-        android:gravity="center"
-        android:text="List" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/lib_pub_dimen_margin">
+
+            <Button
+                android:id="@+id/btn_simple"
+                style="@style/lib_pub_btn_style"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/lib_pub_dimen_margin"
+                android:text="Simple" />
+
+            <Button
+                android:id="@+id/btn_list"
+                style="@style/lib_pub_btn_style"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/lib_pub_dimen_margin"
+                android:text="List" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

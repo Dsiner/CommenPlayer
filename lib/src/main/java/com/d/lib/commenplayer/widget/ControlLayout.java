@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference;
 public class ControlLayout extends RelativeLayout {
     public static final int STATE_LOADING = 0;
     public static final int STATE_PREPARED = 1;
-    public static final int STATE_MOBILE_NET = 2;
+    public static final int STATE_MOBILE_DATA = 2;
     public static final int STATE_COMPLETION = 3;
     public static final int STATE_ERROR = 4;
 
@@ -276,7 +276,7 @@ public class ControlLayout extends RelativeLayout {
                 setControlVisibility(mMediaPlayerControl == null || mMediaPlayerControl.isLive() ? INVISIBLE : VISIBLE, VISIBLE);
                 break;
 
-            case STATE_MOBILE_NET:
+            case STATE_MOBILE_DATA:
                 setPlayerVisibility(GONE, VISIBLE, GONE);
                 setControlVisibility(INVISIBLE, INVISIBLE);
                 setControl(getResources().getString(R.string.lib_player_mobile_data_continue),

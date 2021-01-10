@@ -34,5 +34,5 @@ dependencies {
     implementation project(':lib')
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.dsiner.lib:common:1.1.1'
+    implementation 'com.dsiner.lib:common:1.2.1'
 }

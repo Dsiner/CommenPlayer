@@ -16,10 +16,10 @@ import com.d.lib.commenplayer.widget.ControlLayout;
 import com.d.lib.common.component.mvp.MvpBasePresenter;
 import com.d.lib.common.component.mvp.MvpView;
 import com.d.lib.common.component.mvp.app.BaseActivity;
-import com.d.lib.common.component.netstate.NetBus;
-import com.d.lib.common.component.netstate.NetCompat;
-import com.d.lib.common.component.netstate.NetState;
+import com.d.lib.common.component.network.NetworkBus;
+import com.d.lib.common.component.network.NetworkCompat;
 import com.d.lib.common.component.statusbarcompat.StatusBarCompat;
+import com.d.lib.common.util.NetworkUtils;
 import com.d.lib.common.util.ViewHelper;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -28,7 +28,7 @@ public class SimpleActivity extends BaseActivity<MvpBasePresenter<MvpView>>
         implements View.OnClickListener {
     private CommenPlayer player;
     private boolean mIgnoreMobileData;
-    private NetBus.OnNetListener mOnNetworkListener;
+    private NetworkBus.OnNetworkTypeChangeListener mOnNetworkTypeChangeListener;
 
     @Override
     public void onClick(View v) {
@@ -66,16 +66,16 @@ public class SimpleActivity extends BaseActivity<MvpBasePresenter<MvpView>>
         StatusBarCompat.setStatusBarColor(this,
                 ContextCompat.getColor(this, R.color.colorBlack));
         initPlayer();
-        mOnNetworkListener = new NetBus.OnNetListener() {
+        mOnNetworkTypeChangeListener = new NetworkBus.OnNetworkTypeChangeListener() {
             @Override
-            public void onNetChange(int state) {
+            public void onNetworkTypeChange(NetworkUtils.NetworkType networkType) {
                 if (isFinishing()) {
                     return;
                 }
-                ULog.d("dsiner: Network state--> " + state);
+                ULog.d("dsiner: Network state--> " + networkType);
             }
         };
-        NetBus.getIns().addListener(mOnNetworkListener);
+        NetworkBus.getInstance().addListener(mOnNetworkTypeChangeListener);
     }
 
     private void initPlayer() {
@@ -99,9 +99,10 @@ public class SimpleActivity extends BaseActivity<MvpBasePresenter<MvpView>>
 
             @Override
             public void onPrepared(IMediaPlayer mp) {
-                if (!mIgnoreMobileData && NetCompat.getStatus() == NetState.CONNECTED_MOBILE) {
+                if (!mIgnoreMobileData
+                        && NetworkCompat.isMobileDataType(NetworkCompat.getType())) {
                     player.pause();
-                    player.getControl().setState(ControlLayout.STATE_MOBILE_NET);
+                    player.getControl().setState(ControlLayout.STATE_MOBILE_DATA);
                 } else {
                     player.getControl().setState(ControlLayout.STATE_PREPARED);
                 }
@@ -174,7 +175,7 @@ public class SimpleActivity extends BaseActivity<MvpBasePresenter<MvpView>>
 
     @Override
     protected void onDestroy() {
-        NetBus.getIns().removeListener(mOnNetworkListener);
+        NetworkBus.getInstance().removeListener(mOnNetworkTypeChangeListener);
         super.onDestroy();
     }
 }

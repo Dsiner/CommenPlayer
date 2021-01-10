@@ -2,7 +2,7 @@ package com.d.commenplayer;
 
 import android.app.Application;
 
-import com.d.lib.common.component.netstate.NetCompat;
+import com.d.lib.common.component.network.NetworkCompat;
 
 /**
  * App
@@ -13,6 +13,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        NetCompat.init(getApplicationContext());
+        NetworkCompat.init(getApplicationContext());
     }
 }
